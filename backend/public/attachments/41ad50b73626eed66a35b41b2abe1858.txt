@@ -1,0 +1,31 @@
+idee nada :
+
+
+
+
+to do :
+sprint 3: 
+1upload plusieurs images (fl ticket)(cap video , image,gif etc 
+yjib les images listing les fichiers kima les photos sghar  w baed  kol image ki yaaml visualisation tethal fi popup tekber )
+2commentaire ( text normal , requete sql )
+3affichage historique ticket (assigned to , modified , commit etc) 
+4filtre sur les ticket (priority ) 
+
+rest sprint 1: 
+1-translation : i18n 
+3-role table  
+4-filtre , recherche
+5-REFRESH TOKEN
+
+
+rest sprint 2 : projet 
+pagination ,recherche fl ajout membres 
+fetch users  by role 
+
+
+
+
+
+
+
+

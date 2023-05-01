@@ -1,0 +1,12 @@
+http://localhost:8000/api/all
+http://localhost:8000/api/register
+http://localhost:8000/api/login_check (get)
+http://localhost:8000/dashboard
+http://localhost:8000/api/logout
+http://localhost:8000/api/users/delete/{id}
+http://localhost:8000/api/users/update/{id} 
+
+
+
+
+composer require nelmio/cors-bundle :The NelmioCorsBundle allows you to send Cross-Origin Resource Sharing headers with ACL-style per-URL configuration

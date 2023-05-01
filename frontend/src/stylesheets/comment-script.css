@@ -1,0 +1,46 @@
+.comment-text p {
+    margin-bottom: 0;
+}
+
+.code {
+    background: #263238;
+    color: #eff;
+    padding: 4px 20px;
+    position: relative;
+    border-radius: 0.25rem;
+    counter-reset: step;
+    counter-increment: step 0;
+    transition: background 0.3s;
+    outline: none;
+}
+
+.code:focus {
+    background: #2e3d44;
+}
+
+.code p {
+    position: relative;
+    margin: 0.2rem;
+    font-family: monospace;
+    display: block;
+    white-space: pre;
+}
+
+.code p::before {
+    position: absolute;
+    top: 0;
+    left: -15px;
+    color: greenyellow;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    content: '$';
+    counter-increment: step;
+}
+
+.line{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

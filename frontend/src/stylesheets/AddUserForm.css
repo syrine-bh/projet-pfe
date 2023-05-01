@@ -1,0 +1,21 @@
+.add-user-form {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }
+  
+  .add-user-form label {
+    font-weight: bold;
+  }
+  
+  .add-user-form .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .add-user-form .invalid-feedback {
+    display: block;
+    color: #dc3545;
+  }
+  

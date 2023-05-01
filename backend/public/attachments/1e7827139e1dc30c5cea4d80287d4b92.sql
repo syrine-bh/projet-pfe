@@ -1,0 +1,1 @@
+$script SQL :$SELECT * from tickets
