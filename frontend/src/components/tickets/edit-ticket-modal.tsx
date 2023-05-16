@@ -61,6 +61,9 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
 
     useEffect(() => {
         fetchData()
+
+
+
     }, [])
     const { id } = useParams(); //projectId
 
@@ -362,11 +365,16 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
                                     .fill(null)
                                     .map((item, index) => <CommentLoader key={index} />)
                             ) : (
-                                <div style={{ maxHeight: '400px', overflow: 'auto' }}>
+                                <div style={{ height: '491px', overflow: 'auto' }}>
                                     {selectedComments.map((item: CommentModel, index: number) => {
-                                        return <CommentItem key={index} comment={item} />;
+                                        return <CommentItem key={index} comment={item} ticket={selectedTicket} />;
                                     })}
                                 </div>
+
+
+
+
+
                             )}
 
 

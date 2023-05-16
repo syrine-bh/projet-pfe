@@ -23,6 +23,7 @@ function AddProject() {
     const [selectedClients, setSelectedClients] = useState<UserModel[]>([])
     const [title, setTitle] = useState<string>("");
     const [description, setDescription] = useState<string>("");
+    const [gitRepo, setgitRepo] = useState<string>("");
     const [startdate, setStartdate] = useState<string>("");
     const [deadline, setDeadline] = useState<string>("");
     const [members, setMembers] = useState<UserModel[]>([]);
@@ -149,7 +150,7 @@ function AddProject() {
         }
 
         setLoading(true)
-        const res = await addProject(title, description, startdate, deadline, auth()!.id, selectedClients, selectedMembers);
+        const res = await addProject(title, description,gitRepo, startdate, deadline, auth()!.id, selectedClients, selectedMembers);
         setLoading(false)
 
         if (res.status === 'error') {
@@ -228,6 +229,15 @@ function AddProject() {
                                                 autoFocus={true}></textarea>
                                             <div className="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
+
+                                        <div className="col-12 fv-plugins-icon-container">
+                                                <label className="form-label" htmlFor="formValidationName">git link</label>
+                                                <input type="text" id="title" className="form-control" placeholder="" name="title"
+                                                    value={gitRepo}
+                                                    onChange={(e: any) => setgitRepo(e.target.value)}
+                                                    autoFocus={true} />
+                                                <div className="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
 
 
 

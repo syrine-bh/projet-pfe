@@ -24,11 +24,12 @@ export const fetchProjects = async (userId: string, token: string):Promise<Proje
 
 }
 
-export const addProject = async (title: string, description: string, startdate: string, deadline: string, gestionnaireId: string, clients: UserModel[], members: UserModel[]) => {
+export const addProject = async (title: string, description: string,gitRepo:string, startdate: string, deadline: string, gestionnaireId: string, clients: UserModel[], members: UserModel[]) => {
     try {
         const response = await apiClient.post<BackendResponse>('/addProject', {
             title: title,
             description: description,
+            gitRepo:gitRepo,
             startdate: startdate,
             deadline: deadline,
             gestionnaireId: gestionnaireId,

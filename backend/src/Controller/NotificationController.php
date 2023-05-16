@@ -23,11 +23,23 @@ use App\Entity\Notification ;
 
 class NotificationController extends AbstractController
 {
-    #[Route('/api/notifications', name: 'app_notification')]
-    public function index( NotificationRepository $notificationRepository,NormalizerInterface $normalizer): JsonResponse
+    #[Route('/api/notifications/{id}', name: 'app_notification')]
+    public function index(int $id,UserRepository $userRepository,NormalizerInterface $normalizer): JsonResponse
     {
-        $notifications = $notificationRepository->findAll();
+        $user = $userRepository->find($id);
+        $notifications = $user->getNotifications()->toArray();
         $reversed = array_reverse($notifications);
+        $json=$normalizer->normalize($reversed, 'json' ,['groups'=>'getNotifications']);
+        return new JsonResponse($json, 200, []);
+    }
+
+    #[Route('/api/notificationsForPanel/{id}', name: 'app_notificationsForPanel')]
+    public function notificationsForPanel(int $id,UserRepository $userRepository,NormalizerInterface $normalizer): JsonResponse
+    {
+        $user = $userRepository->find($id);
+        $notifications = $user->getNotifications()->toArray();
+        $seenNotifications = array_filter($notifications,function (Notification $notification) { return $notification->getVu() == 0;});
+        $reversed = array_reverse($seenNotifications);
         $json=$normalizer->normalize($reversed, 'json' ,['groups'=>'getNotifications']);
         return new JsonResponse($json, 200, []);
     }

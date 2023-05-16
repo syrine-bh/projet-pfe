@@ -123,7 +123,7 @@ class Ticket
 
 
     #[ORM\ManyToOne(targetEntity: Project::class, inversedBy: 'tickets')]
-    #[Groups(["tickets"])]
+    #[Groups(["tickets","ticket"])]
     private ?Project $project = null;
 
     #[ORM\OneToMany(mappedBy: 'ticket', targetEntity: Attachment::class, orphanRemoval: true)]

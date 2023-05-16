@@ -102,19 +102,25 @@ function Projectitem({ project }: ProjectitemProps) {
           <div className="d-flex align-items-center">
             <div className="d-flex align-items-center">
               <ul className="list-unstyled d-flex align-items-center avatar-group mb-0 zindex-2">
-                {(project.members.map((member, index) => <li
-                  key={index}
-                  data-bs-toggle="tooltip"
-                  data-popup="tooltip-custom"
-                  data-bs-placement="top"
-                  className="avatar avatar-sm pull-up me-2"
-                  aria-label={member.firstname + " " + member.lastname}
-                  data-bs-original-title={member.firstname + " " + member.lastname}>
-                  <img className="rounded-circle" src="./assets/img/avatars/1.png" alt="Avatar" />
-                </li>
+                {(project.members.map((member, index) => 
+                  (index < 4) &&
+                  <li
+                    key={index}
+                    data-bs-toggle="tooltip"
+                    data-popup="tooltip-custom"
+                    data-bs-placement="top"
+                    className="avatar avatar-sm pull-up me-2"
+                    aria-label={member.firstname + " " + member.lastname}
+                    data-bs-original-title={member.firstname + " " + member.lastname}>
+                    <ProfileAvatar
+                      firstName={member.firstname}
+                      lastName={member.lastname}
+                      radius={33}
+                    />                   </li>
                 ))}
-
-                <li><small className="text-muted">{project.members.length} Members</small></li>
+                {(project.members.length > 4) && <li>
+                  <small className="text-muted ms-1">+{project.members.length - 4}</small>
+                </li>}
               </ul>
             </div>
             <div className="ms-auto">

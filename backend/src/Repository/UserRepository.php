@@ -68,7 +68,15 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
-    public function getProjectMembers(int $projectId,int $offset,int $perPage){
+    public function getProjectMembers(int $projectId){
+        return $this->createQueryBuilder('u')
+            ->innerJoin(Project::class, 'p', Join::WITH, 'p MEMBER OF u.memberProjects')
+            ->andWhere('p.id = :projectId')
+            ->setParameter('projectId', $projectId)
+            ->getQuery()->getResult();
+    }
+
+    public function getPaginatedProjectMembers(int $projectId,int $offset,int $perPage){
         return $this->createQueryBuilder('u')
             ->innerJoin(Project::class, 'p', Join::WITH, 'p MEMBER OF u.memberProjects')
             ->andWhere('p.id = :projectId')

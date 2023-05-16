@@ -4,6 +4,8 @@ import { Link, useNavigate } from 'react-router-dom'
 import { updateNotification } from '../../fetchers/notification-fetcher';
 import { NotificationModel } from '../../models/NotificationModel'
 
+//
+
 interface NotificationPanelProps {
     notifications: NotificationModel[]
 }
@@ -11,18 +13,34 @@ interface NotificationPanelProps {
 function NotificationPanel({ notifications }: NotificationPanelProps) {
     const navigate = useNavigate();
     const auth = useAuthUser();
-    const handleClick = async (idNotification: number, idUser: number) => {
-        const response = await updateNotification(idNotification,auth()!.token)
+    const handleClick = async (notification: NotificationModel) => {
+        const response = await updateNotification(notification.id, auth()!.token)
 
-        if(response.status==="success"){
+        if (response.status === "success") {
             document.getElementById("toggleNotification")!.click()
-            navigate(`/validateUser/${idUser}`)
+
+            switch (notification.type) {
+                case 'user':
+                    navigate(`/validateUser/${notification.link}`)
+                    break;
+                case 'project':
+                    navigate(`/projects`)
+                    break;
+                case 'ticket':
+                    navigate(`/projects/${notification.link}/tickets`)
+                    break;
+                default:
+                    console.log("error in navigation")
+                    break;
+            }
         }
 
-        
+
     }
 
     return (
+
+
         <ul id='notificationPanel' className="dropdown-menu dropdown-menu-end py-0">
             <li className="dropdown-menu-header border-bottom">
                 <div className="dropdown-header d-flex align-items-center py-3">
@@ -30,8 +48,8 @@ function NotificationPanel({ notifications }: NotificationPanelProps) {
                     <a href="#" className="dropdown-notifications-all text-body" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Mark all as read" data-bs-original-title="Mark all as read"><i className="bx fs-4 bx-envelope-open"></i></a>
                 </div>
             </li>
-            <li className="dropdown-notifications-list scrollable-container ps">
-                <ul className="list-group list-group-flush">
+            <li className="dropdown-notifications-list scrollable-container ps" style={{ maxHeight: '400px', overflow: 'auto' }}>
+                <ul className="list-group list-group-flush" style={{ maxHeight: '400px', overflow: 'auto' }}>
                     {/* <li className="list-group-item list-group-item-action dropdown-notifications-item marked-as-read">
                         <div className="d-flex">
                             <div className="flex-shrink-0 me-3">
@@ -50,9 +68,10 @@ function NotificationPanel({ notifications }: NotificationPanelProps) {
                             </div>
                         </div>
                     </li> */}
+
                     {notifications.map((notification) => {
                         return <li key={notification.id} className="list-group-item list-group-item-action dropdown-notifications-item">
-                            <div onClick={() => handleClick(notification.id, notification.user.id)}>
+                            <div onClick={() => handleClick(notification)}>
                                 <div className="d-flex">
                                     <div className="flex-shrink-0 me-3">
                                         <div className="avatar">
@@ -76,11 +95,12 @@ function NotificationPanel({ notifications }: NotificationPanelProps) {
                 </ul>
                 <div className="ps__rail-x" style={{ left: "0px", bottom: "0px" }}><div className="ps__thumb-x" tabIndex={0} style={{ left: "0px", width: "0px" }}></div></div><div className="ps__rail-y" style={{ top: "0px", right: "0px" }}><div className="ps__thumb-y" tabIndex={0} style={{ top: "0px", height: "0px" }}></div></div></li>
             <li className="dropdown-menu-footer border-top">
-                <a href="#" className="dropdown-item d-flex justify-content-center p-3">
+                <Link to={'/notifications'} className="dropdown-item d-flex justify-content-center p-3">
                     View all notifications
-                </a>
+                </Link>
             </li>
         </ul>
+
     )
 }
 

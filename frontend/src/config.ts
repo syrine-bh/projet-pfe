@@ -18,7 +18,7 @@ export function getRandomInt(min:number, max:number) {
 export const INIT_USER: UserModel = { id: 0, email: "", firstname: "", lastname: "", isActive: 0, isVerified: 0, phoneNumber: "", roles: ["ROLE_MEMBRE"], token: "", company: "" }
 
 export const INIT_PROJECT: ProjectModel = {
-  id: 0, title: "", description: "", startdate: new Date().toISOString(), deadline: new Date().toISOString(), gestionnaire: INIT_USER, clients: [], members: [],nbrTicketDone:0,nbrTicketsTotal:0,nbrComments:0
+  id: 0, title: "", description: "", gitRepo:"" ,startdate: new Date().toISOString(), deadline: new Date().toISOString(), gestionnaire: INIT_USER, clients: [], members: [],nbrTicketDone:0,nbrTicketsTotal:0,nbrComments:0
 }
 
 export const INIT_TICKET: TicketModel = {

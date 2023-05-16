@@ -249,6 +249,16 @@ function UpdateProject() {
                                             <div className="fv-plugins-message-container invalid-feedback"></div>
                                         </div>
 
+                                        <div className="col-12 fv-plugins-icon-container">
+                                                <label className="form-label" htmlFor="formValidationName">git link</label>
+                                                <input type="text" id="title" className="form-control" placeholder="" name="title"
+                                                
+                                                    value={project.gitRepo}
+                                                    onChange={handleChange}
+                                                    autoFocus={true} />
+                                                <div className="fv-plugins-message-container invalid-feedback"></div>
+                                            </div>
+
 
 
 

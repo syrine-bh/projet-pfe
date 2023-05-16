@@ -7,6 +7,7 @@ use App\Entity\Notification;
 use App\Entity\Project;
 use App\Entity\Ticket;
 use App\Entity\User;
+use App\Repository\NotificationRepository;
 use App\Repository\ProjectRepository;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
@@ -234,10 +235,12 @@ class TicketController extends AbstractController
         //notification
         $em = $doctrine->getManager();
         $notification = new Notification();
-        $notification->setUser($member);
+        $notification->addDestination($member);
         $notification->setContenu("You have been assigned to ticket #" . $ticket->getId());
         $notification->setCreatedAt(new \DateTimeImmutable());
         $notification->setVu(0);
+        $notification->setType('ticket');
+        $notification->setLink($ticket->getId());
 
         $em->persist($notification);
         $em->flush();
@@ -246,6 +249,8 @@ class TicketController extends AbstractController
 
         return $this->json(['status'=> 'success','message' => 'ticket updated successfully']);
     }
+
+
 
 
 

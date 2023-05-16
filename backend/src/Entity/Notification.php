@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\NotificationRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -17,7 +19,15 @@ class Notification
 
     #[ORM\Column(length: 255)]
     #[Groups(["getNotifications"])]
+    private ?string $type = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(["getNotifications"])]
     private ?string $contenu = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(["getNotifications"])]
+    private ?int $link = null;
 
     #[ORM\Column]
     #[Groups(["getNotifications"])]
@@ -27,10 +37,43 @@ class Notification
     #[Groups(["getNotifications"])]
     private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'notifications')]
-    #[ORM\JoinColumn(nullable: false)]
-    #[Groups(["getNotifications"])]
-    private ?User $user = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class,mappedBy:"notifications")]
+    private Collection $destinations;
+
+
+    public function __construct()
+    {
+        $this->destinations = new ArrayCollection();
+    }
+
+
+    public function getDestinations(): Collection
+    {
+        return $this->destinations;
+    }
+
+
+    public function addDestination(User $destination): self
+    {
+        if (!$this->destinations->contains($destination)) {
+            $this->destinations->add($destination);
+            $destination->addNotification($this);
+        }
+        return $this;
+    }
+
+    public function removeDestination(User $destination): self
+    {
+        if ($this->destinations->removeElement($destination)) {
+            // set the owning side to null (unless already changed)
+            if ($destination->getNotifications()->contains($this)) {
+                $destination->removeNotification($this);
+            }
+        }
+
+        return $this;
+    }
 
     public function getId(): ?int
     {
@@ -73,15 +116,40 @@ class Notification
         return $this;
     }
 
-    public function getUser(): ?User
+    /**
+     * @return string|null
+     */
+    public function getType(): ?string
     {
-        return $this->user;
+        return $this->type;
     }
 
-    public function setUser(?User $user): self
+    /**
+     * @param string|null $type
+     */
+    public function setType(?string $type): void
     {
-        $this->user = $user;
-
-        return $this;
+        $this->type = $type;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getLink(): ?int
+    {
+        return $this->link;
+    }
+
+    /**
+     * @param int|null $link
+     */
+    public function setLink(?int $link): void
+    {
+        $this->link = $link;
+    }
+
+
+
+
+
 }

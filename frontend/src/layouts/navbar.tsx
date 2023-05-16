@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react'
 import { useAuthUser, useSignOut } from 'react-auth-kit'
 
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import NotificationPanel from '../components/layouts/notification-panel';
-import { fetchNotifications } from '../fetchers/notification-fetcher';
+import { fetchNotificationAssignedUser, fetchNotifications, fetchNotificationsForPanel } from '../fetchers/notification-fetcher';
 import { NotificationModel } from '../models/NotificationModel';
 
 
@@ -11,6 +11,8 @@ import { NotificationModel } from '../models/NotificationModel';
 //stylesheets
 import '../stylesheets/navbar.css'
 import ProfileAvatar from '../components/profile-avatar';
+import { TicketModel } from '../models/TicketModel';
+import { INIT_TICKET } from '../config';
 
 
 function Navbar() {
@@ -23,6 +25,7 @@ function Navbar() {
   const signOut = useSignOut();
 
   const [notifications, setNotifications] = useState<NotificationModel[]>([])
+  //const [ticket, setTicket] = useState<TicketModel>(INIT_TICKET)
 
   const handleMenu = () => {
     window.Helpers.toggleCollapsed();
@@ -36,17 +39,15 @@ function Navbar() {
 
 
   const fetchData = async () => {
-    if (auth()!.roles.includes("ROLE_ADMIN")) {
-      const response = await fetchNotifications(auth()!.token)
-      setNotifications(response)
-    }
-
+    const response = await fetchNotificationsForPanel(auth()!.id, auth()!.token)
+    setNotifications(response)
   }
+
+
 
   useEffect(() => {
     fetchData()
   }, [])
-
 
 
   return (
@@ -106,18 +107,23 @@ function Navbar() {
 
 
 
-
-
-          {(auth()!.roles.includes("ROLE_ADMIN")) && <li className="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
-            <button id='toggleNotification' style={{
-              background: "none",
-              border: "none"
-            }} className="nav-link dropdown-toggle hide-arrow" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false">
+          <li className="nav-item dropdown-notifications navbar-dropdown dropdown me-3 me-xl-1">
+            <button
+              id="toggleNotification"
+              style={{ background: "none", border: "none" }}
+              className="nav-link dropdown-toggle hide-arrow"
+              data-bs-toggle="dropdown"
+              data-bs-auto-close="outside"
+              aria-expanded="false">
               <i className="bx bx-bell bx-sm"></i>
-              <span className="badge bg-danger rounded-pill badge-notifications">{notifications.filter((item) => item.vu === 0).length}</span>
+
+              {(notifications.filter((item) => item.vu === 0).length !== 0) && <span className="badge bg-danger rounded-pill badge-notifications">
+                {notifications.filter((item) => item.vu === 0).length}
+              </span>}
+
             </button>
             <NotificationPanel notifications={notifications} />
-          </li>}
+          </li>
 
 
 
@@ -129,8 +135,8 @@ function Navbar() {
                   firstName={auth()!.firstname}
                   lastName={auth()!.lastname}
                   radius={40}
-                />    
-                 </div>
+                />
+              </div>
             </div>
             <ul className="dropdown-menu dropdown-menu-end">
               <li>
@@ -138,11 +144,11 @@ function Navbar() {
                   <div className="d-flex">
                     <div className="flex-shrink-0 me-3">
                       <div className="avatar avatar-online">
-                      <ProfileAvatar
-                  firstName={auth()!.firstname}
-                  lastName={auth()!.lastname}
-                  radius={40}
-                />                       </div>
+                        <ProfileAvatar
+                          firstName={auth()!.firstname}
+                          lastName={auth()!.lastname}
+                          radius={40}
+                        />                       </div>
                     </div>
                     <div className="flex-grow-1">
                       <span className="fw-semibold d-block">{auth()!.firstname + " " + auth()!.lastname}</span>

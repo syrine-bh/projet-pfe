@@ -3,27 +3,18 @@ import { CommentModel } from '../../models/CommentModel';
 import { useState } from 'react';
 
 import '../../stylesheets/comment-script.css'
+import '../../stylesheets/comment-commit.css'
+import { TicketModel } from '../../models/TicketModel';
 
 interface CommentitemProps {
     comment: CommentModel;
-}
-function downloadComment({ comment }: CommentitemProps) {
-    let formattedComment = comment.content;
-
-    if (comment.type === "script") {
-        formattedComment = formattedComment.replace(/(<([^>]+)>)/gi, ''); // Supprimer toutes les balises HTML
-        formattedComment = formattedComment.trim().replace(/(?:\r\n|\r|\n)/g, ''); // Supprimer les sauts de ligne
-        formattedComment = `$${formattedComment}`; // Ajouter le préfixe SQL
-        const element = document.createElement("a");
-        const file = new Blob([formattedComment], { type: 'text/plain' });
-        element.href = URL.createObjectURL(file);
-        element.download = "script.sql";
-        document.body.appendChild(element); // Required for this to work in FireFox
-        element.click();
-    }
+    ticket: TicketModel
 }
 
-function CommentItem({ comment }: CommentitemProps) {
+
+
+
+function CommentItem({ comment, ticket }: CommentitemProps) {
     let formattedComment = comment.content;
 
     let commentWithoutParagraph = comment.content.replaceAll('<p>', '').replaceAll('</p>', '')
@@ -72,11 +63,24 @@ function CommentItem({ comment }: CommentitemProps) {
 
 
 
+
+
     const [copied, setCopied] = useState(-1);
+
+    const [copiedSHA, setCopiedSHA] = useState(-1);
+
+
+
     function handleCopy(item: string, index: number) {
         navigator.clipboard.writeText(item);
         setCopied(index);
         setTimeout(() => setCopied(-1), 3000);
+    }
+
+    const handleCopySHA = (comment: CommentModel) => {
+        navigator.clipboard.writeText(comment.content.replace(/<\/?p>/g, ''));
+        setCopiedSHA(comment.id);
+        setTimeout(() => setCopiedSHA(-1), 3000);
     }
 
 
@@ -106,19 +110,39 @@ function CommentItem({ comment }: CommentitemProps) {
                                 ))}
                             </div>
                         )
-                        : comment.type === "commit"
-                        ? <div style={{ display: 'flex', alignItems: 'center' }}>
-                            <span style={{ marginRight: '5px' }}>commit ID : </span>
-                            <span className="text comment-text" dangerouslySetInnerHTML={{ __html: comment.content }}></span>
-                        </div>
-                        : <span className="text comment-text" dangerouslySetInnerHTML={{ __html: comment.content }}></span>
-                }
+                            : comment.type === "commit"
+                                ?
+                                <div className='d-flex'>
+                                    <div className='commit-container commit-border'>
+                                        <div className='copy-sha' onClick={() => handleCopySHA(comment)}>
+                                            {copiedSHA === comment.id
+                                                ? <i className='bx bx-check' ></i>
+                                                : <i className='bx bx-copy'></i>}
+                                        </div>
+                                        <a target="_blank" href={`${ticket.project.gitRepo}/commit/${comment.content.replace(/<\/?p>/g, '')}`} className='open-link'>
+                                            {comment.content.replace(/<\/?p>/g, '').substring(0, 7)}
+                                        </a>
+                                    </div>
+                                    <a target="_blank" href={`${ticket.project.gitRepo}/tree/${comment.content.replace(/<\/?p>/g, '')}`} className='browse-code'>
+                                        <i className='bx bx-code'></i>
+                                    </a>
+                                </div>
+
+
+
+
+
+
+                                : <span className="text comment-text" dangerouslySetInnerHTML={{ __html: comment.content }}></span>
+                        }
 
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                             <small className="text-muted">{new Date(comment.createdAt).toLocaleDateString()}</small>
-                            <button type="button" className="btn btn-icon btn-label-primary me-2" onClick={downloadComment}>
-                                <span className="tf-icons bx bx-download"></span>
-                            </button>
+                            {comment.type === "script" && (
+                                <button type="button" className="btn btn-icon btn-label-primary me-2" onClick={downloadComment}>
+                                    <span className="tf-icons bx bx-download"></span>
+                                </button>
+                            )}
                         </div>
 
                     </div>

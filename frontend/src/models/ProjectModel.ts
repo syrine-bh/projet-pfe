@@ -4,6 +4,7 @@ export interface ProjectModel {
     id: number,
     title: string,
     description: string,
+    gitRepo: string,
     startdate: string,
     deadline: string,
     gestionnaire: UserModel

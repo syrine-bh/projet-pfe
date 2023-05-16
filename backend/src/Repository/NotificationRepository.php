@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Notification;
+use App\Entity\Project;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +40,14 @@ class NotificationRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    public function getNotificationsForUser(int $userId){
+        return $this->createQueryBuilder('n')
+            ->innerJoin(User::class, 'u', Join::WITH, 'n MEMBER OF u.notifications')
+            ->andWhere('u.id = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()->getResult();
     }
 
 //    /**

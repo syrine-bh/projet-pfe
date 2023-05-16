@@ -5,6 +5,7 @@ import { INIT_USER } from '../config'
 import { validateUser } from '../fetchers/notification-fetcher';
 import { fetchUserById } from '../fetchers/user-fetcher';
 import { UserModel } from '../models/UserModel';
+import ProfileAvatar from '../components/profile-avatar';
 
 function ValidateUser() {
 
@@ -104,8 +105,13 @@ function ValidateUser() {
                             <div className="card-body">
                                 <div className="user-avatar-section">
                                     <div className=" d-flex align-items-center flex-column">
-                                        <img className="img-fluid rounded my-4" src="./assets/img/avatars/4.png" height="110" width="110" alt="User avatar" />
-                                        <div className="user-info text-center">
+                                        <ProfileAvatar
+                                            
+                                            firstName={user.firstname}
+                                            lastName={user.lastname}
+                                            rounded={false}
+                                            radius={100}
+                                        />                                        <div className="user-info text-center">
                                             <h4 className="mb-2">{user.firstname + " " + user.lastname}</h4>
                                             <span className="badge bg-label-secondary">{user.roles[0].split("_")[1]}</span>
                                         </div>

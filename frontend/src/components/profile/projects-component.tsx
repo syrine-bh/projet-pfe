@@ -1,37 +1,42 @@
-import React, { useEffect, useState } from 'react'
-import { useAuthUser } from 'react-auth-kit';
-import { ProjectModel } from '../../models/ProjectModel';
-import { fetchProjects } from '../../fetchers/project-fetcher';
-import Projectitem from '../projects/project-item';
-import { Link } from 'react-router-dom';
-
-function ProjectsComponent() {
-  const auth = useAuthUser();
-
-  const [projects, setProjects] = useState<ProjectModel[]>([])
+import { useState, useEffect } from "react";
+import { useAuthUser } from "react-auth-kit";
+import { Link } from "react-router-dom";
+import { fetchProjects } from "../../fetchers/project-fetcher";
+import { ProjectModel } from "../../models/ProjectModel";
+import Projectitem from "../projects/project-item";
 
 
-  const fetchDatau = async () => {
-      const response = await fetchProjects(auth()!.id,auth()!.token)
-      setProjects(response)
-  }
 
 
-  useEffect(() => {
-    fetchData()
-  }, [])
-  
-  function fetchData() {
-    
-  }
-  return (
-    <>
+function Projects() {
+
+    const auth = useAuthUser();
+
+    const [projects, setProjects] = useState<ProjectModel[]>([])
+
+
+    const fetchData = async () => {
+        const response = await fetchProjects(auth()!.id, auth()!.token)
+        setProjects(response)
+    }
+
+
+
+
+    useEffect(() => {
+        fetchData()
+    }, [])
+
+
+    return (
+        <>
             <div className="content-wrapper">
                 <div className="container-xxl flex-grow-1 container-p-y">
 
 
                     <h4 style={{ display: "flex", justifyContent: "space-between" }} className="fw-bold py-3 mb-4">
                         <span className="text-muted fw-light"> All the Projets </span>
+
                     </h4>
 
 
@@ -50,7 +55,32 @@ function ProjectsComponent() {
 
 
         </>
-  )
+
+
+    )
 }
 
-export default ProjectsComponent
+export default Projects
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+function auth() {
+    throw new Error('Function not implemented.');
+}
+

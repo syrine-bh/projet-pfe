@@ -15,17 +15,36 @@ class Project
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(["projects","tickets"])]
+    #[Groups(["projects","tickets","ticket"])]
 
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(["projects","tickets"])]
+    #[Groups(["projects","tickets","ticket"])]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
     #[Groups(["projects"])]
     private ?string $description = null;
+    #[ORM\Column(length: 255)]
+    #[Groups(["projects","ticket"])]
+    private ?string $gitRepo = null;
+
+    /**
+     * @return string|null
+     */
+    public function getGitRepo(): ?string
+    {
+        return $this->gitRepo;
+    }
+
+    /**
+     * @param string|null $gitRepo
+     */
+    public function setGitRepo(?string $gitRepo): void
+    {
+        $this->gitRepo = $gitRepo;
+    }
 
     #[ORM\Column(type: Types::DATE_IMMUTABLE)]
     #[Groups(["projects"])]

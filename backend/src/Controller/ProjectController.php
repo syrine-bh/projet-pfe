@@ -62,6 +62,7 @@ class ProjectController extends AbstractController
 
         $title = $decoded['title'] ?? null;
         $description = $decoded['description'] ?? null;
+        $gitRepo = $decoded['gitRepo'] ?? null;
         $startdate = $decoded['startdate'] ?? null;
         $deadline = $decoded['deadline'] ?? null;
         $gestionnaireId = $decoded['gestionnaireId'] ?? null;
@@ -74,6 +75,9 @@ class ProjectController extends AbstractController
 
         if (!$description) {
             return $this->json(['status'=> 'error','message' => 'Please provide a description']);
+        }
+        if (!$gitRepo) {
+            return $this->json(['status'=> 'error','message' => 'Please provide a git']);
         }
 
         if (!$startdate) {
@@ -99,6 +103,7 @@ class ProjectController extends AbstractController
         $project = new Project();
         $project->setTitle($title);
         $project->setDescription($description);
+        $project->setGitRepo($gitRepo);
         $project->setStartDate(new \DateTimeImmutable($startdate));
         $project->setDeadline(new \DateTimeImmutable($deadline));
 
@@ -132,38 +137,28 @@ class ProjectController extends AbstractController
         //notification
         $em = $doctrine->getManager();
 
+        $notification = new Notification();
         // Send notification to members
         foreach ($members as $member) {
             $user = $userRepository->find($member['id']);
-            if (!$user) {
-                return $this->json(['status'=> 'error','message' => 'Member not found']);
-            }
-
-            $notification = new Notification();
-            $notification->setUser($user);
-            $notification->setContenu("You have been added to the project " . $project->getTitle());
-            $notification->setCreatedAt(new \DateTimeImmutable());
-            $notification->setVu(0);
-
-            $em->persist($notification);
+            if (!$user) {return $this->json(['status'=> 'error','message' => 'Member not found']); }
+            $notification->addDestination($user);
         }
 
-        // Send notification to clients
+
         foreach ($clients as $client) {
             $user = $userRepository->find($client['id']);
-            if (!$user) {
-                return $this->json(['status'=> 'error','message' => 'Client not found']);
-            }
-
-            $notification = new Notification();
-            $notification->setUser($user);
-            $notification->setContenu("You have been added to the project " . $project->getTitle());
-            $notification->setCreatedAt(new \DateTimeImmutable());
-            $notification->setVu(0);
-
-            $em->persist($notification);
+            if (!$user) {return $this->json(['status'=> 'error','message' => 'Client not found']);}
+            $notification->addDestination($user);
         }
 
+        $notification->setContenu("You have been added to the project: " . $project->getTitle());
+        $notification->setCreatedAt(new \DateTimeImmutable());
+        $notification->setVu(0);
+        $notification->setType('project');
+        $notification->setLink($project->getId());
+
+        $em->persist($notification);
         $em->flush();
 
 
@@ -301,7 +296,7 @@ class ProjectController extends AbstractController
 
 
 
-        $members = $userRepository->getProjectMembers($id,$offset,$perPage);
+        $members = $userRepository->getPaginatedProjectMembers($id,$offset,$perPage);
 
         $totalUsers = count($members);
 

@@ -62,7 +62,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $activationToken;
 
 
-    #[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
+    /*#[ORM\OneToMany(mappedBy: 'user', targetEntity: Notification::class, orphanRemoval: true)]
+    private Collection $notifications;*/
+    #[ORM\JoinTable(name: 'user_notification')]
+    #[ORM\ManyToMany(targetEntity: Notification::class,inversedBy:"destinations" )]
     private Collection $notifications;
 
     #[ORM\JoinTable(name: 'member_project')]
@@ -416,7 +419,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if (!$this->notifications->contains($notification)) {
             $this->notifications->add($notification);
-            $notification->setUser($this);
+            $notification->addDestination($this);
         }
 
         return $this;
@@ -426,8 +429,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         if ($this->notifications->removeElement($notification)) {
             // set the owning side to null (unless already changed)
-            if ($notification->getUser() === $this) {
-                $notification->setUser(null);
+            if ($notification->getDestinations()->contains($this)) {
+                $notification->removeDestination($this);
             }
         }
 

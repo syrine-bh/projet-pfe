@@ -82,17 +82,24 @@ class AuthentificationController extends AbstractController
         }
 
         $em->persist($user);
+        $em->flush();
+
+        $admins = $userRepository->getUsersWithAdminRole();
+
 
         $notification = new Notification();
-        $notification->setUser($user);
+        foreach ($admins as $admin) {
+            $notification->addDestination($admin);
+        }
         $notification->setContenu("new user ");
+        $notification->setType('user');
+        $notification->setLink($user->getId());
         $notification->setCreatedAt(new \DateTimeImmutable());
         $notification->setVu(0);
 
         $em->persist($notification);
         $em->flush();
 
-        $admins = $userRepository->getUsersWithAdminRole();
 
         //list of destination emails
         $destinations = [];

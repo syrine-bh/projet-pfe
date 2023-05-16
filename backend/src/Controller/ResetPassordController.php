@@ -43,10 +43,10 @@ class ResetPassordController extends AbstractController
         $em->flush();
 
         //envoyer le code de verifiaction par mail (un compte microsoft , le bundle mailer ne fonctionne pas avec les comptes gmail)
-        $transport = Transport::fromDsn('smtp://stagepfe2023@outlook.com:sbh18051998@smtp.office365.com:587');
+        $transport = Transport::fromDsn('smtp://nour.benabderrahmen@esprit-tn.com:Vienna2018@smtp.office365.com:587');
         $mailer = new Mailer($transport);
         $mail = (new Email());
-        $mail->from('stagepfe2023@outlook.com');
+        $mail->from('nour.benabderrahmen@esprit-tn.com');
         $mail->to($email);
         $mail->subject('Activate account code');
         $mail->html(body: "<div>Voici le code d'activation de votre compte : " . $verificationCode . " </div>");

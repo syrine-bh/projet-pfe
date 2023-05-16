@@ -16,7 +16,8 @@ function RoleCard({ title, users }: RoleCardProps) {
                     <ul className="list-unstyled d-flex align-items-center avatar-group mb-0">
 
                         {users.map((item, index) => {
-                            return (index < 4) && <li key={index} data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
+                            return (index < 4) && 
+                            <li key={index} data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
                                 className="avatar avatar-sm pull-up" aria-label="Vinnie Mostowy"
                                 data-bs-original-title="Vinnie Mostowy">
                                 <ProfileAvatar

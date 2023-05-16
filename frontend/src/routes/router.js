@@ -30,6 +30,7 @@ const AddProject = lazy(() => import("../pages/10-add-project"));
 const ProjectDetails = lazy(() => import("../pages/11-project-details"));
 const UpdateProject = lazy(() => import("../pages/12-update-project"));
 const TicketDetails = lazy(() => import("../pages/6.1-ticket_details"));
+const Notifications = lazy(() => import("../pages/13-notifications"));
 
 
 
@@ -58,7 +59,8 @@ const Routes = [
       { path: "/Editprofile", exact: true, element: <Editprofile /> },
       { path: "/addProject", exact: true, element: <AddProject /> },
       { path: "/projectDetails/:projectId", exact: true, element: <ProjectDetails /> },
-      { path: "/updateProject/:projectId", exact: true, element: <UpdateProject /> }
+      { path: "/updateProject/:projectId", exact: true, element: <UpdateProject /> },
+      { path: "/notifications", exact: true, element: <Notifications /> }
 
       
       

@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Comment;
+use App\Entity\Notification;
 use App\Entity\Ticket;
 use App\Repository\TicketRepository;
 use App\Repository\UserRepository;
@@ -19,7 +20,7 @@ class CommentController extends AbstractController
 
 
     #[Route('/ticket/{ticketId}/comment/add', name: 'add_comment', methods: ['POST'])]
-    public function addComment(Request $request,NormalizerInterface $normalizer, EntityManagerInterface $entityManager, UserRepository $userRepository ,TicketRepository $ticketRepository, int $ticketId): JsonResponse
+    public function addComment(ManagerRegistry $doctrine ,Request $request,NormalizerInterface $normalizer, EntityManagerInterface $entityManager, UserRepository $userRepository ,TicketRepository $ticketRepository, int $ticketId): JsonResponse
     {
         $ticket = $ticketRepository->find($ticketId);
         if (!$ticket) {
@@ -37,6 +38,30 @@ class CommentController extends AbstractController
 
         $entityManager->persist($comment);
         $entityManager->flush();
+
+
+
+
+
+        //notification
+        $em = $doctrine->getManager();
+
+        $notification = new Notification();
+        $members = $userRepository->getProjectMembers($ticket->getProject()->getId());
+
+        foreach ($members as $member) { $notification->addDestination($member); }
+        // Set the notification content
+        $notification->setContenu($addedBy->getEmail()." added a comment on the ticket ");
+
+        $notification->setCreatedAt(new \DateTimeImmutable());
+        $notification->setVu(0);
+        $notification->setType('comment');
+        $notification->setLink($comment->getId());
+
+        $em->persist($notification);
+        $em->flush();
+
+
 
         $json=$normalizer->normalize($comment, 'json' ,['groups'=>'comments']);
         return $this->json($json);
