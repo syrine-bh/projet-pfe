@@ -10,7 +10,7 @@ COPY package*.json ./
 # Install project dependencies
 
 
-RUN npm update 
+RUN npm update --force
 
 # Copy the entire project to the container
 COPY . .
