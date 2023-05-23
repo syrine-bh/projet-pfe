@@ -9,7 +9,8 @@ COPY package*.json ./
 
 # Install project dependencies
 
-RUN npm install --force --timeout=600000
+RUN npm config set registry http://your-package-mirror-url
+RUN npm install --force --timeout=1200000
 
 # Copy the entire project to the container
 COPY . .
