@@ -9,7 +9,7 @@ COPY package*.json ./
 
 # Install project dependencies
 
-RUN npm config set registry http://your-package-mirror-url
+
 RUN npm install --force 
 
 # Copy the entire project to the container
