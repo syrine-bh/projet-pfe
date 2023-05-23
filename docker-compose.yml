@@ -9,7 +9,7 @@ services:
       - 3306:3306
     environment:
       MYSQL_DATABASE: db_wevioo
-      MYSQL_USER: Elyes
+      MYSQL_USER: Syrine
       MYSQL_PASSWORD: 123
       MYSQL_ROOT_PASSWORD: 123
     volumes:
