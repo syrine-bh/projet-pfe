@@ -10,7 +10,6 @@ COPY package*.json ./
 # Install project dependencies
 
 
-RUN npm update --force --registry=https://registry.npm.taobao.org
 
 # Copy the entire project to the container
 COPY . .
