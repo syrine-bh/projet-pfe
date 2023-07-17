@@ -39,6 +39,64 @@ class TicketRepository extends ServiceEntityRepository
         }
     }
 
+    public function getTicketCount(): int
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('COUNT(u.id)');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+    public function getNumberOfOpenTickets(): int
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('COUNT(t.id) AS openTicketCount')
+            ->where($qb->expr()->in('t.status', ':openStatuses'))
+            ->setParameter('openStatuses', ['Requested', 'Todo', 'InProgress']);
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return (int) $result;
+    }
+
+    public function getNumberOfClosedTickets()
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('COUNT(t.id) AS openTicketCount')
+            ->where($qb->expr()->in('t.status', ':closedStatuses'))
+            ->setParameter('closedStatuses', 'Done');
+
+        $result = $qb->getQuery()->getSingleScalarResult();
+
+        return (int) $result;
+    }
+
+    public function getTicketDistributionByPriority(): array
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('COUNT(t.id) AS ticketCount', 't.priority AS ticketPriority')
+            ->groupBy('t.priority');
+
+        $results = $qb->getQuery()->getResult();
+
+        $totalTickets = 0;
+        $distribution = [];
+
+        foreach ($results as $result) {
+            $ticketCount = (int) $result['ticketCount'];
+            $ticketPriority = $result['ticketPriority'];
+
+            $totalTickets += $ticketCount;
+            $distribution[$ticketPriority] = $ticketCount;
+        }
+
+        // Calculate the percentage distribution
+        foreach ($distribution as &$count) {
+            $count = round(($count / $totalTickets) * 100, 2);
+        }
+
+        return $distribution;
+    }
+
 //    /**
 //     * @return Ticket[] Returns an array of Ticket objects
 //     */

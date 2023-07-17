@@ -33,13 +33,14 @@ function AddProject() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
 
-    const [paginatedUsers, setPaginatedUsers] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
+    //const [paginatedUsers, setPaginatedUsers] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
     const [paginatedClients, setPaginatedClients] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
-    const [PaginatedMembersGestionnaires, setPaginatedMembersGestionnaires] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
+    const [paginatedMembersGestionnaires, setPaginatedMembersGestionnaires] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
 
 
     const [perPage, setPerPage] = useState<number>(10)
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentClientPage, setCurrentClientPage] = useState(1)
+    const [currentMembrePage, setCurrentMembrePage] = useState(1)
 
     const auth = useAuthUser();
     const [searchParams] = useSearchParams();
@@ -58,32 +59,29 @@ function AddProject() {
     ///
 
     const fetchClients = async () => {
-        var initPage = 1
-        var initPerPage = 10
-
-        if (searchParams.get("page") && Number(searchParams.get("page")!)) {
-            setCurrentPage(Number(searchParams.get("page")!))
-            initPage = Number(searchParams.get("page")!)
-        }
-
-        if (searchParams.get("perPage") && Number(searchParams.get("perPage")!)) {
-            setPerPage(Number(searchParams.get("perPage")!))
-            initPerPage = Number(searchParams.get("perPage")!)
-        }
-
-        const response = await fetchPaginatedClients(auth()!.token, initPerPage, initPage)
+        const response = await fetchPaginatedClients(auth()!.token, perPage, currentClientPage)
         setPaginatedClients(response)
     }
 
+    const fetchMembers = async () => {
+        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, perPage, currentMembrePage)
+        setPaginatedMembersGestionnaires(response)
+    }
 
+    const changeMemberPage = async (value: number) => {
+        setPaginatedMembersGestionnaires({ ...paginatedMembersGestionnaires, docs: [], isLoadingAccounts: true })
+        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, perPage, value+1);
+        setPaginatedMembersGestionnaires(response)
+        setCurrentMembrePage(value+1)
+        //navigate(`/users?perPage=${value}&page=1`);
+    }
 
-    const changePage = async (value: number) => {
-        setPaginatedUsers({ ...paginatedUsers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedClients(auth()!.token, value, 1);
+    const changeClientPage = async (value: number) => {
+        setPaginatedClients({ ...paginatedClients, docs: [], isLoadingAccounts: true })
+        const response = await fetchPaginatedClients(auth()!.token, perPage, value+1);
         setPaginatedClients(response)
-        setPerPage(value)
-        setCurrentPage(1)
-        navigate(`/users?perPage=${value}&page=1`);
+        setCurrentClientPage(value+1)
+        //navigate(`/users?perPage=${value}&page=1`);
     }
 
     //
@@ -92,23 +90,7 @@ function AddProject() {
         const response = await fetchUsers(auth()!.token)
         setMembers(response)
     }*/
-    const fetchMembers = async () => {
-        var initPage = 1
-        var initPerPage = 10
 
-        if (searchParams.get("page") && Number(searchParams.get("page")!)) {
-            setCurrentPage(Number(searchParams.get("page")!))
-            initPage = Number(searchParams.get("page")!)
-        }
-
-        if (searchParams.get("perPage") && Number(searchParams.get("perPage")!)) {
-            setPerPage(Number(searchParams.get("perPage")!))
-            initPerPage = Number(searchParams.get("perPage")!)
-        }
-
-        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, initPerPage, initPage)
-        setPaginatedMembersGestionnaires(response)
-    }
 
     const handleSubmit = async (e: any) => {
         e.preventDefault();
@@ -268,16 +250,7 @@ function AddProject() {
 
                                         <div className="table-responsive text-nowrap">
                                             <br></br>
-                                            <div className="row mx-2"><div className="col-md-2"><div className="me-3">
-                                                <div className="dataTables_length" id="DataTables_Table_0_length"><label>
-                                                    <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" className="form-select"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label></div></div></div>
-                                                <div className="col-md-10"><div className="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0">
-                                                    <div id="DataTables_Table_0_filter" className="dataTables_filter">
-                                                        <label><input type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" /></label></div><div className="dt-buttons btn-group flex-wrap"> <div className="btn-group">
-
-                                                        </div>
-
-                                                    </div></div></div></div>
+                                         
                                             <table className="table">
                                                 <thead>
                                                     <tr>
@@ -334,14 +307,7 @@ function AddProject() {
 
                                         <div className="table-responsive text-nowrap">
                                             <br></br>
-                                            <div className="row mx-2"><div className="col-md-2"><div className="me-3">
-                                                <div className="dataTables_length" id="DataTables_Table_0_length"><label>
-                                                    <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" className="form-select"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label></div></div></div>
-                                                <div className="col-md-10"><div className="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" /></label></div><div className="dt-buttons btn-group flex-wrap"> <div className="btn-group">
-
-                                                </div>
-
-                                                </div></div></div></div>
+                                       
                                             <table className="table">
                                                 <thead>
                                                     <tr>
@@ -461,11 +427,11 @@ function AddProject() {
                                         breakLinkClassName="page-link"
                                         containerClassName="pagination"
                                         activeClassName="active"
-                                        onPageChange={(event) => changePage(event.selected)}
+                                        onPageChange={(event) => changeClientPage(event.selected)}
                                         pageRangeDisplayed={3}
                                         marginPagesDisplayed={2}
                                         pageCount={paginatedClients.pagination.total_pages}
-                                        forcePage={currentPage - 1}
+                                        forcePage={currentClientPage - 1}
                                     />
                                 </div>
                             </>
@@ -493,7 +459,7 @@ function AddProject() {
                                 <div>no clients</div>
                             </div>
                         ) : (
-                            <>                        <table className="table">
+                            <>   <table className="table">
                             <thead>
                                 <tr>
                                     <th>#</th>
@@ -503,7 +469,7 @@ function AddProject() {
                                 </tr>
                             </thead>
                             <tbody className="table-border-bottom-0">
-                                {PaginatedMembersGestionnaires.docs.map((member) => {
+                                {paginatedMembersGestionnaires.docs.map((member) => {
                                     return <ClientModalItem
                                         key={member.id}
                                         client={member}
@@ -540,11 +506,11 @@ function AddProject() {
                                         breakLinkClassName="page-link"
                                         containerClassName="pagination"
                                         activeClassName="active"
-                                        onPageChange={(event) => changePage(event.selected)}
+                                        onPageChange={(event) => changeMemberPage(event.selected)}
                                         pageRangeDisplayed={3}
                                         marginPagesDisplayed={2}
                                         pageCount={paginatedClients.pagination.total_pages}
-                                        forcePage={currentPage - 1}
+                                        forcePage={currentMembrePage - 1}
                                     />
                                 </div>
                             </>
@@ -563,5 +529,3 @@ function AddProject() {
 }
 
 export default AddProject
-
-

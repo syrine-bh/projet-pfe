@@ -5,6 +5,7 @@ import { fetchProjectById } from "../fetchers/project-fetcher";
 import { ProjectModel } from "../models/ProjectModel";
 
 import { Link, useParams } from "react-router-dom";
+import ProfileAvatar from "../components/profile-avatar";
 
 function ProjectDetails() {
   const { projectId } = useParams()
@@ -82,7 +83,7 @@ function ProjectDetails() {
                       style={{ width: "70%" }}
                     ></div>
                   </div>
-                  <p className="mt-1 mb-0">6 days remaining until your plan requires update</p>
+                  <p className="mt-1 mb-0">6 days </p>
                 </div>
               </div>
 
@@ -90,17 +91,10 @@ function ProjectDetails() {
           </div>
 
         </div>
-        <h6><span className="text-muted fw-light">Clients table </span></h6>
+        <h6><span className="text-muted fw-light">Clients  </span></h6>
         <div className="card mb-4">
           <br></br>
-          <div className="row mx-2"><div className="col-md-2"><div className="me-3">
-            <div className="dataTables_length" id="DataTables_Table_0_length"><label>
-              <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" className="form-select"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label></div></div></div>
-            <div className="col-md-10"><div className="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" /></label></div><div className="dt-buttons btn-group flex-wrap"> <div className="btn-group">
-
-            </div>
-
-            </div></div></div></div>
+         
           <table className="table">
             <thead>
               <tr>
@@ -119,8 +113,13 @@ function ProjectDetails() {
                     <div className="d-flex justify-content-left align-items-center">
                       <div className="avatar-wrapper">
                         <div className="avatar avatar-sm me-3">
-                          <img src="./assets/img/avatars/2.png" alt="Avatar" className="rounded-circle" />
+                        <ProfileAvatar
+                                    firstName={client.firstname}
+                                    lastName={client.lastname}
+                                    radius={32}
+                                />
                         </div>
+
                       </div>
                       <div className="d-flex flex-column">
                         <a href="app-user-view-account.html" className="text-body text-truncate">
@@ -139,17 +138,10 @@ function ProjectDetails() {
         </div>
         <br></br>
 
-        <h6><span className="text-muted fw-light">members table </span></h6>
+        <h6><span className="text-muted fw-light">Members  </span></h6>
         <div className="card mb-4">
           <br></br>
-          <div className="row mx-2"><div className="col-md-2"><div className="me-3">
-            <div className="dataTables_length" id="DataTables_Table_0_length"><label>
-              <select name="DataTables_Table_0_length" aria-controls="DataTables_Table_0" className="form-select"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select></label></div></div></div>
-            <div className="col-md-10"><div className="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0"><div id="DataTables_Table_0_filter" className="dataTables_filter"><label><input type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" /></label></div><div className="dt-buttons btn-group flex-wrap"> <div className="btn-group">
-
-            </div>
-
-            </div></div></div></div>
+         
           <table className="table">
             <thead>
               <tr>
@@ -169,7 +161,11 @@ function ProjectDetails() {
                     <div className="d-flex justify-content-left align-items-center">
                       <div className="avatar-wrapper">
                         <div className="avatar avatar-sm me-3">
-                          <img src="./assets/img/avatars/2.png" alt="Avatar" className="rounded-circle" />
+                        <ProfileAvatar
+                                    firstName={member.firstname}
+                                    lastName={member.lastname}
+                                    radius={32}
+                                />
                         </div>
                       </div>
                       <div className="d-flex flex-column">

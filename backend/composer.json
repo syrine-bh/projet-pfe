@@ -1,5 +1,4 @@
 {
-    "name": "myproject/myproject",
     "type": "project",
     "license": "proprietary",
     "minimum-stability": "stable",
@@ -78,4 +77,5 @@
             "allow-contrib": false,
             "require": "6.2.*"
         }
-    }}
+    }
+}

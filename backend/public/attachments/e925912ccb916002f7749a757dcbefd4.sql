@@ -1,0 +1,1 @@
+$script SQL :$select * from table employee

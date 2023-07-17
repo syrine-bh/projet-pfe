@@ -105,7 +105,71 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getResult();
     }
 
+    public function getUserCount(): int
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('COUNT(u.id)');
 
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getActiveUserCount(): int
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('COUNT(u.id)')
+            ->where('u.isActive = :isActive')
+            ->setParameter('isActive', true);
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getUsersDistributionByRole(array $users): array
+    {
+        $distribution = [
+            "ROLE_MEMBRE"=>0,
+            "ROLE_ADMIN"=>0,
+            "ROLE_GESTIONNAIRE"=>0,
+            "ROLE_CLIENT"=>0,
+            "Autres"=>0
+        ];
+        foreach ($users as $user) {
+            if(in_array("ROLE_MEMBRE",$user->getRoles())){
+                $distribution['ROLE_MEMBRE'] = $distribution['ROLE_MEMBRE']+1;
+            }
+            else if(in_array("ROLE_ADMIN",$user->getRoles())){
+                $distribution['ROLE_ADMIN'] = $distribution['ROLE_ADMIN']+1;
+            }
+            else if(in_array("ROLE_GESTIONNAIRE",$user->getRoles())){
+                $distribution['ROLE_GESTIONNAIRE'] = $distribution['ROLE_GESTIONNAIRE']+1;
+            }
+            else if(in_array("ROLE_CLIENT",$user->getRoles())){
+                $distribution['ROLE_CLIENT'] = $distribution['ROLE_CLIENT']+1;
+            }
+            else{
+                $distribution['Autres'] = $distribution['Autres']+1;
+            }
+        }
+
+        return $distribution;
+    }
+
+    /*public function findTopUsersWithMostAssignedTickets()
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
+            SELECT u.email, COUNT(t.id) AS ticketCount
+            FROM App\Entity\User u
+            LEFT JOIN u.assignedTickets t
+            GROUP BY u.id
+            ORDER BY ticketCount DESC
+        ";
+
+        $query = $em->createQuery($dql)
+            ->setMaxResults(5);
+
+        return $query->getResult();
+    }*/
 
 //    public function findOneBySomeField($value): ?User
 //    {

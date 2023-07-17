@@ -22,6 +22,7 @@ import ReactPaginate from "react-paginate"
 
 import '../stylesheets/pagination.css'
 
+
 function Users() {
     const ROLES_LIST = [
         { value: 'ROLE_USER', label: 'Membre' },
@@ -39,7 +40,7 @@ function Users() {
     const [paginatedUsers, setPaginatedUsers] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
     const [perPage, setPerPage] = useState<number>(10)
     const [currentPage, setCurrentPage] = useState(1)
-
+    const [query, setQuery] = useState("")
     //custom hooks
     const auth = useAuthUser();
     const navigate = useNavigate();
@@ -48,6 +49,7 @@ function Users() {
     const fetchData = async () => {
         var initPage = 1
         var initPerPage = 10
+        var query = ""
 
         if (searchParams.get("page") && Number(searchParams.get("page")!)) {
             setCurrentPage(Number(searchParams.get("page")!))
@@ -59,13 +61,18 @@ function Users() {
             initPerPage = Number(searchParams.get("perPage")!)
         }
 
-        const response = await fetchPaginatedUsers(auth()!.token, initPerPage, initPage)
+        if (searchParams.get("query")) {
+            setQuery(searchParams.get("query")!)
+            query = searchParams.get("query")!
+        }
+
+        const response = await fetchPaginatedUsers(auth()!.token, initPerPage, initPage, query)
         setPaginatedUsers(response)
     }
 
     const changePage = async (index: number) => {
         setPaginatedUsers({ ...paginatedUsers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedUsers(auth()!.token, perPage, index + 1);
+        const response = await fetchPaginatedUsers(auth()!.token, perPage, index + 1, query);
         setPaginatedUsers(response)
         setCurrentPage(index + 1)
         navigate(`/users?perPage=${perPage}&page=${index + 1}`);
@@ -73,7 +80,7 @@ function Users() {
 
     const changePerPage = async (value: number) => {
         setPaginatedUsers({ ...paginatedUsers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedUsers(auth()!.token, value, 1);
+        const response = await fetchPaginatedUsers(auth()!.token, value, 1, query);
         setPaginatedUsers(response)
         setPerPage(value)
         setCurrentPage(1)
@@ -115,9 +122,23 @@ function Users() {
         }
     }
 
+    const handleSearch = async (e: any) => {
+        e.preventDefault()
+        let searchQuery = (document.getElementById('searchInput') as HTMLInputElement).value
+        if(searchQuery){
+            setPaginatedUsers({ ...paginatedUsers, docs: [], isLoadingAccounts: true })
+            const response = await fetchPaginatedUsers(auth()!.token, 10, 1, searchQuery);
+            setPaginatedUsers(response)
+            setQuery(searchQuery)
+            setCurrentPage(1)
+            navigate(`/users?perPage=${10}&page=1&query=${searchQuery}`);
+        }
+
+    }
     if (!auth()!.roles.includes("ROLE_ADMIN")) {//is not admin
         return <Navigate to={'/dashboard'} replace />
     }
+
     //pagination
     return (
         <>
@@ -125,10 +146,8 @@ function Users() {
 
                 <div style={{ marginBottom: "20px" }} className="row">
                     <div className="col">
-                        <h4 className="fw-bold py-3 mb-2">Roles List</h4>
 
-                        <p>A role provided access to predefined menus and features so that depending on <br /> assigned role an administrator
-                            can have access to what user needs.</p>
+                    
                     </div>
                     <div className="col-md-4">
                         <div className="card h-100">
@@ -143,9 +162,7 @@ function Users() {
                                 </div>
                                 <div className="col-sm-7">
                                     <div className="card-body text-sm-end text-center ps-sm-0">
-                                        <button data-bs-target="#addRoleModal" data-bs-toggle="modal"
-                                            className="btn btn-primary mb-3 text-nowrap add-new-role">Add New Role</button>
-                                        <p className="mb-0">Add role, if it does not exist</p>
+                                        <p className="mb-0">administrator can have access to what user needs.</p>
                                     </div>
                                 </div>
                             </div>
@@ -160,25 +177,25 @@ function Users() {
                     <div className="col-xl-3 col-lg-6 col-md-6">
                         <RoleCard
                             users={paginatedUsers.docs.filter((item) => item.roles.includes("ROLE_ADMIN"))}
-                            title={"Administrateur"}
+                            title={"Administrator"}
                         />
                     </div>
                     <div className="col-xl-3 col-lg-6 col-md-6">
                         <RoleCard
                             users={paginatedUsers.docs.filter((item) => item.roles.includes("ROLE_GESTIONNAIRE"))}
-                            title={"Gestionnaire "}
+                            title={"Manager "}
                         />
                     </div>
                     <div className="col-xl-3 col-lg-6 col-md-6">
                         <RoleCard
                             users={paginatedUsers.docs.filter((item) => item.roles.includes("ROLE_MEMBRE"))}
-                            title={"Membre"}
+                            title={"Member"}
                         />
                     </div>
                     <div className="col-xl-3 col-lg-6 col-md-6">
                         <RoleCard
                             users={paginatedUsers.docs.filter((item) => item.roles.includes("ROLE_CLIENT"))}
-                            title={"Client"}
+                            title={"Customer"}
                         />
                     </div>
 
@@ -205,7 +222,9 @@ function Users() {
                                         <div className="dt-action-buttons text-xl-end text-lg-start text-md-end text-start d-flex align-items-center justify-content-end flex-md-row flex-column mb-3 mb-md-0">
                                             <div id="DataTables_Table_0_filter" className="dataTables_filter">
                                                 <label>
-                                                    <input type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" />
+                                                    <form onSubmit={handleSearch}>
+                                                        <input id="searchInput" type="search" className="form-control" placeholder="Search.." aria-controls="DataTables_Table_0" />
+                                                    </form>
                                                 </label>
                                             </div>
                                         </div>
@@ -213,7 +232,7 @@ function Users() {
                                 </div>
                             </div>
 
-                            <h5 className="card-header">users  Table</h5>
+                            <h5 className="card-header">Users  </h5>
                             <div className="table-responsive text-nowrap">
                                 <table className="table">
                                     <thead>

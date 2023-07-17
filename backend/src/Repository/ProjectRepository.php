@@ -39,6 +39,38 @@ class ProjectRepository extends ServiceEntityRepository
         }
     }
 
+    public function getProjectCount(): int
+    {
+        $qb = $this->createQueryBuilder('u');
+        $qb->select('COUNT(u.id)');
+
+        return (int) $qb->getQuery()->getSingleScalarResult();
+    }
+
+
+    public function getAverageTicketsPerProject(): float
+    {
+        $qb = $this->createQueryBuilder('p');
+        $qb->select('COUNT(t.id) AS ticketCount')
+            ->leftJoin('p.tickets', 't')
+            ->groupBy('p.id');
+
+        $result = $qb->getQuery()->getResult();
+
+        $totalProjects = count($result);
+        $totalTickets = 0;
+
+        foreach ($result as $row) {
+            $totalTickets += (int) $row['ticketCount'];
+        }
+
+        if ($totalProjects === 0) {
+            return 0;
+        }
+
+        return round($totalTickets / $totalProjects, 2);
+    }
+
 
 
 

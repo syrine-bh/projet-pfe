@@ -62,13 +62,7 @@ function Navbar() {
 
         <div className="navbar-nav align-items-center">
           <div className="nav-item d-flex align-items-center">
-            <i className="bx bx-search fs-4 lh-0"></i>
-            <input
-              type="text"
-              className="form-control border-0 shadow-none"
-              placeholder="Search..."
-              aria-label="Search..."
-            />
+
           </div>
         </div>
 
@@ -84,7 +78,7 @@ function Navbar() {
             </div> */}
           </li>
 
-          <li className="nav-item dropdown-language dropdown me-2 me-xl-0">
+          {/*<li className="nav-item dropdown-language dropdown me-2 me-xl-0">
             <a className="nav-link dropdown-toggle hide-arrow" href="#" data-bs-toggle="dropdown" aria-expanded="false">
               ENG
             </a>
@@ -102,7 +96,7 @@ function Navbar() {
                 </a>
               </li>
             </ul>
-          </li>
+          </li>*/}
 
 
 

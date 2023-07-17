@@ -13,19 +13,21 @@ function renderRole(role: string): JSX.Element {
     switch (role) {
         case "ADMIN":
             return <span className="badge badge-center rounded-pill bg-label-success w-px-30 h-px-30 me-2">
-                <i className="bx bx-cog bx-xs"></i>
+                <i className="bx bx-font-color bx-xs"></i>
             </span>
         case "USER":
             return <span className="badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2">
-                <i className="bx bx-pie-chart-alt bx-xs"></i>
+                <i className="bx bx-user-circle'bx-xs"></i>
             </span>
         case "CLIENT":
-            return <span className="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2"><i className="bx bx-user bx-xs"></i></span>
+            return <span className="badge badge-center rounded-pill bg-label-warning w-px-30 h-px-30 me-2">
+                <i className="bx bx-user bx-xs"></i></span>
         case "GESTIONNAIRE":
-            return <span className="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2"><i className="bx bx-edit bx-xs"></i></span>
+            return <span className="badge badge-center rounded-pill bg-label-info w-px-30 h-px-30 me-2">
+                <i className="bx bx-user-voice bx-xs"></i></span>
         default:
             return <span className="badge badge-center rounded-pill bg-label-primary w-px-30 h-px-30 me-2">
-                <i className="bx bx-pie-chart-alt bx-xs"></i>
+                <i className="bx bxs-user-circle bx-xs"></i>
             </span>
     }
 }

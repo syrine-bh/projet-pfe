@@ -303,9 +303,9 @@ export const fetchUsers = async (token: string): Promise<UserModel[]> => {
 }
 
 
-export const fetchPaginatedUsers = async (token: string, perPage: number, page: number): Promise<PaginatedUsers> => {
+export const fetchPaginatedUsers = async (token: string, perPage: number, page: number,query:string): Promise<PaginatedUsers> => {
     try {
-        const response = await apiClient.get<PaginatedUsers>(`/api/AllPaginated?page=${page}&perPage=${perPage}`, { headers: { "Authorization": `Bearer ${token}` } });
+        const response = await apiClient.get<PaginatedUsers>(`/api/AllPaginated?page=${page}&perPage=${perPage}&query=${query}`, { headers: { "Authorization": `Bearer ${token}` } });
 
         if (response.status === 200) {
             return {

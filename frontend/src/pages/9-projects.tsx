@@ -36,9 +36,9 @@ function Projects() {
 
 
                     <h4 style={{ display: "flex", justifyContent: "space-between" }} className="fw-bold py-3 mb-4">
-                        <span className="text-muted fw-light"> All the Projets </span>
+                        <span className="text-muted fw-light"> Projects </span>
 
-                        <Link to={"/addProject"} className="btn btn-sm btn-iconbtn btn-primary text-nowrap" >Add Project</Link>
+                        <Link to={"/addProject"} className="btn btn-sm btn-iconbtn btn-primary text-nowrap" >Add project</Link>
                     </h4>
 
 

@@ -20,6 +20,7 @@ function RoleCard({ title, users }: RoleCardProps) {
                             <li key={index} data-bs-toggle="tooltip" data-popup="tooltip-custom" data-bs-placement="top"
                                 className="avatar avatar-sm pull-up" aria-label="Vinnie Mostowy"
                                 data-bs-original-title="Vinnie Mostowy">
+                                    
                                 <ProfileAvatar
                                     firstName={item.firstname}
                                     lastName={item.lastname}
@@ -35,10 +36,8 @@ function RoleCard({ title, users }: RoleCardProps) {
                 <div className="d-flex justify-content-between align-items-end">
                     <div className="role-heading">
                         <h4 className="mb-1">{title}</h4>
-                        <a href="#" data-bs-toggle="modal" data-bs-target="#addRoleModal"
-                            className="role-edit-modal"><small>Edit Role</small></a>
+                        
                     </div>
-                    <a href="#" className="text-muted"><i className="bx bx-copy"></i></a>
                 </div>
             </div>
         </div>

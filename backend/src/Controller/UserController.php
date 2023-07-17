@@ -30,20 +30,31 @@ class UserController extends AbstractController
         // Récupération des paramètres de pagination
         $page = $request->query->getInt('page', 1);
         $perPage = $request->query->getInt('perPage', 10);
-        //$searchString = $request->query->get('query', "");
+        $searchString = $request->query->get('query', "");
 
         // Calcul de l'offset
         $offset = ($page - 1) * $perPage;
 
 
         // Récupération des utilisateurs paginés
-        /*if($searchString!=""){
-            $users = $userRepository->findBy([], [], $perPage, $offset);
+        if($searchString!=""){
+            //$users = $userRepository->findBy([], [], $perPage, $offset);
+            $queryBuilder = $userRepository->createQueryBuilder('u');
+            $queryBuilder->where(
+                $queryBuilder->expr()->orX(
+                    $queryBuilder->expr()->like('u.firstname', ':searchString'),
+                    $queryBuilder->expr()->like('u.lastname', ':searchString'),
+                    $queryBuilder->expr()->like('u.email', ':searchString')
+                )
+            );
+            $queryBuilder->setParameter('searchString', $searchString.'%');
+            $users = $queryBuilder->getQuery()->getResult();
+
         }else{
             $users = $userRepository->findBy([], [], $perPage, $offset);
-        }*/
+        }
 
-        $users = $userRepository->findBy([], [], $perPage, $offset);
+        //$users = $userRepository->findBy([], [], $perPage, $offset);
 
 
 

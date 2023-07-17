@@ -113,7 +113,7 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
 
     const changePage = async (index: number) => {
         setPaginatedMembers({ ...paginatedMembers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedUsers(auth()!.token, PER_PAGE, index + 1);
+        const response = await fetchPaginatedUsers(auth()!.token, PER_PAGE, index + 1,"");
         setPaginatedMembers(response)
         setCurrentPage(index + 1)
     }

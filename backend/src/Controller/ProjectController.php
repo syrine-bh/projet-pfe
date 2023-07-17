@@ -186,7 +186,7 @@ class ProjectController extends AbstractController
         ], 404);
     }
     #[Route('/updateProject/{id}', name: 'updateProject', methods: ['PUT'])]
-    public function updateProject(ManagerRegistry $doctrine, UserRepository $userRepository, ProjectRepository $projectRepository, Request $request, $id): Response
+    public function updateProject(ManagerRegistry $doctrine,NormalizerInterface $normalizer, UserRepository $userRepository, ProjectRepository $projectRepository, Request $request, $id): Response
     {
         $em = $doctrine->getManager();
         $decoded = json_decode($request->getContent(), true);
@@ -196,8 +196,9 @@ class ProjectController extends AbstractController
         $startdate = $decoded['startdate'] ?? null;
         $deadline = $decoded['deadline'] ?? null;
         $gestionnaireId = $decoded['gestionnaireId'] ?? null;
-        $clients = $decoded['clients'] ?? [];
-        $members = $decoded['members'] ?? [];
+        $clients = $decoded['clients'];
+        $members = $decoded['members'];
+
 
         if (!$title) {
             return $this->json(['status'=> 'error','message' => 'Please provide a title']);
@@ -245,8 +246,9 @@ class ProjectController extends AbstractController
         }
 
         $project->setGestionnaire($gestionnaire);
-       // $project->removeClients();
-       // $project->removeMembers();
+
+        /*$project->removeClients();
+        $project->removeMembers();
 
         foreach ($clients as $client) {
             $user = $userRepository->find($client['id']);
@@ -261,13 +263,30 @@ class ProjectController extends AbstractController
             if (!$user) {
                 return $this->json(['status'=> 'error','message' => 'Member not found']);
             }
+            $project->addMember($user);
+        }*/
+        $project->removeClients();
+        $project->removeMembers();
 
+        foreach ($clients as $client) {
+            $user = $userRepository->find($client['id']);
+            if (!$user) {
+                return $this->json(['status'=> 'error','message' => 'Client not found']);
+            }
+            $project->addClient($user);
+        }
+
+        foreach ($members as $member) {
+            $user = $userRepository->find($member['id']);
+            if (!$user) {
+                return $this->json(['status'=> 'error','message' => 'Member not found']);
+            }
             $project->addMember($user);
         }
 
-        $em->persist($project);
         $em->flush();
 
+        $projectRepository->save($project,true);
         return $this->json(['status'=> 'success','message' => 'Project updated successfully']);
     }
 

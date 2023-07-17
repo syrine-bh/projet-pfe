@@ -203,7 +203,7 @@ function ValidateUser() {
                                             </button>
                                             <button disabled={loading} type="submit" className="btn btn-primary me-2">
                                                 {(loading) && <span className="spinner-grow me-1" role="status" aria-hidden="true"></span>}
-                                                Validate user
+                                                Validate User
                                             </button>
                                         </div>
                                     </div>

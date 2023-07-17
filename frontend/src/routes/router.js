@@ -9,6 +9,7 @@ const FullLayout = lazy(() => import("../layouts/full-layout"));
 
 /***** Pages ****/
 const Dashboard = lazy(() => import("../pages/1-dashboard"));
+
 const Login = lazy(() => import("../pages/0-login"));
 const Search = lazy(() => import("../pages/2-search"));
 const Profile = lazy(() => import("../pages/5-profile"));
@@ -47,6 +48,7 @@ const Routes = [
     children: [
       { path: "/", element: <Navigate to="/login" /> },
       { path: "/dashboard", exact: true, element: <Dashboard /> },
+
       { path: "/search", exact: true, element: <Search /> },
       { path: "/users", exact: true, element: <Users /> },
       { path: "/projects", exact: true, element: <Projects /> },

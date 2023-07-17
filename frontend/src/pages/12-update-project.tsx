@@ -35,12 +35,16 @@ function UpdateProject() {
     const [loading, setLoading] = useState(false)
     const navigate = useNavigate()
     const [paginatedUsers, setPaginatedUsers] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
+
+
+
     const [paginatedClients, setPaginatedClients] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
-    const [PaginatedMembersGestionnaires, setPaginatedMembersGestionnaires] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
+    const [paginatedMembersGestionnaires, setPaginatedMembersGestionnaires] = useState<PaginatedUsers>(INIT_PAGINATED_USERS)
 
 
     const [perPage, setPerPage] = useState<number>(10)
-    const [currentPage, setCurrentPage] = useState(1)
+    const [currentClientPage, setCurrentClientPage] = useState(1)
+    const [currentMembrePage, setCurrentMembrePage] = useState(1)
 
 
     const auth = useAuthUser()
@@ -48,9 +52,7 @@ function UpdateProject() {
 
 
     useEffect(() => {
-
         fetchProject()
-
         fetchClients()
         fetchMembers()
     }, [])
@@ -62,60 +64,33 @@ function UpdateProject() {
     }
 
 
-   /* const fetchClients = async () => {
-        const response = await fetchUsers(auth()!.token)
-        setClients(response)
-    }
 
-    const fetchMembers = async () => {
-        const response = await fetchUsers(auth()!.token)
-        setMembers(response)
-    }*/
     const fetchClients = async () => {
-        var initPage = 1
-        var initPerPage = 10
-
-        if (searchParams.get("page") && Number(searchParams.get("page")!)) {
-            setCurrentPage(Number(searchParams.get("page")!))
-            initPage = Number(searchParams.get("page")!)
-        }
-
-        if (searchParams.get("perPage") && Number(searchParams.get("perPage")!)) {
-            setPerPage(Number(searchParams.get("perPage")!))
-            initPerPage = Number(searchParams.get("perPage")!)
-        }
-
-        const response = await fetchPaginatedClients(auth()!.token, initPerPage, initPage)
+        const response = await fetchPaginatedClients(auth()!.token, perPage, currentClientPage)
         setPaginatedClients(response)
     }
 
-
-
-    const changePage = async (value: number) => {
-        setPaginatedUsers({ ...paginatedUsers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedClients(auth()!.token, value, 1);
-        setPaginatedClients(response)
-        setPerPage(value)
-        setCurrentPage(1)
-        navigate(`/users?perPage=${value}&page=1`);
-    }
     const fetchMembers = async () => {
-        var initPage = 1
-        var initPerPage = 10
-
-        if (searchParams.get("page") && Number(searchParams.get("page")!)) {
-            setCurrentPage(Number(searchParams.get("page")!))
-            initPage = Number(searchParams.get("page")!)
-        }
-
-        if (searchParams.get("perPage") && Number(searchParams.get("perPage")!)) {
-            setPerPage(Number(searchParams.get("perPage")!))
-            initPerPage = Number(searchParams.get("perPage")!)
-        }
-
-        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, initPerPage, initPage)
+        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, perPage, currentMembrePage)
         setPaginatedMembersGestionnaires(response)
     }
+
+    const changeMemberPage = async (value: number) => {
+        setPaginatedMembersGestionnaires({ ...paginatedMembersGestionnaires, docs: [], isLoadingAccounts: true })
+        const response = await fetchPaginatedMembersGestionnaires(auth()!.token, perPage, value + 1);
+        setPaginatedMembersGestionnaires(response)
+        setCurrentMembrePage(value + 1)
+        //navigate(`/users?perPage=${value}&page=1`);
+    }
+
+    const changeClientPage = async (value: number) => {
+        setPaginatedClients({ ...paginatedClients, docs: [], isLoadingAccounts: true })
+        const response = await fetchPaginatedClients(auth()!.token, perPage, value + 1);
+        setPaginatedClients(response)
+        setCurrentClientPage(value + 1)
+        //navigate(`/users?perPage=${value}&page=1`);
+    }
+
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
         setProject({
@@ -170,7 +145,7 @@ function UpdateProject() {
             setErrorMessage("Please provide at least one member");
             return;
         }
-
+        console.log(project)
         setLoading(true)
         const res = await updateProject(project, auth()!.id, auth()!.token);
         setLoading(false)
@@ -180,7 +155,8 @@ function UpdateProject() {
             setErrorMessage(res.message)
             return;
         }
-        navigate(`/projects`)
+        
+        //navigate(`/projects`)
     }
 
 
@@ -250,14 +226,14 @@ function UpdateProject() {
                                         </div>
 
                                         <div className="col-12 fv-plugins-icon-container">
-                                                <label className="form-label" htmlFor="formValidationName">git link</label>
-                                                <input type="text" id="title" className="form-control" placeholder="" name="title"
-                                                
-                                                    value={project.gitRepo}
-                                                    onChange={handleChange}
-                                                    autoFocus={true} />
-                                                <div className="fv-plugins-message-container invalid-feedback"></div>
-                                            </div>
+                                            <label className="form-label" htmlFor="formValidationName">git link</label>
+                                            <input type="text" id="title" className="form-control" placeholder="" name="title"
+
+                                                value={project.gitRepo}
+                                                onChange={handleChange}
+                                                autoFocus={true} />
+                                            <div className="fv-plugins-message-container invalid-feedback"></div>
+                                        </div>
 
 
 
@@ -470,7 +446,7 @@ function UpdateProject() {
 
                 </ModalFooter>
                         </Modal>*/}
-                        <Modal size="lg" isOpen={clientsModal} toggle={toggleClientsModal}>
+            <Modal size="lg" isOpen={clientsModal} toggle={toggleClientsModal}>
                 <ModalHeader toggle={toggleClientsModal}>Clients</ModalHeader>
                 <ModalBody>
                     <div className="table-responsive text-nowrap">
@@ -494,21 +470,21 @@ function UpdateProject() {
                                         {paginatedClients.docs.map((client) => {
                                             return (
                                                 <ClientModalItem
-                                                key={client.id}
-                                                client={client}
-                                                isSelected={project.clients.filter(item => item.id == client.id).length !== 0}
-                                                onDeleteUser={() => {
-                                                    setProject({
-                                                        ...project,
-                                                        clients: project.clients.filter(item => item.id != client.id)
-                                                    })
-                                                }}
-                                                onSelectUser={() => {
-                                                    setProject({
-                                                        ...project,
-                                                        clients: [...project.clients, client]
-                                                    })
-                                                }} />
+                                                    key={client.id}
+                                                    client={client}
+                                                    isSelected={project.clients.filter(item => item.id == client.id).length !== 0}
+                                                    onDeleteUser={() => {
+                                                        setProject({
+                                                            ...project,
+                                                            clients: project.clients.filter(item => item.id != client.id)
+                                                        })
+                                                    }}
+                                                    onSelectUser={() => {
+                                                        setProject({
+                                                            ...project,
+                                                            clients: [...project.clients, client]
+                                                        })
+                                                    }} />
                                             );
                                         })}
                                     </tbody>
@@ -536,11 +512,11 @@ function UpdateProject() {
                                         breakLinkClassName="page-link"
                                         containerClassName="pagination"
                                         activeClassName="active"
-                                        onPageChange={(event) => changePage(event.selected)}
+                                        onPageChange={(event) => changeClientPage(event.selected)}
                                         pageRangeDisplayed={3}
                                         marginPagesDisplayed={2}
                                         pageCount={paginatedClients.pagination.total_pages}
-                                        forcePage={currentPage - 1}
+                                        forcePage={currentClientPage - 1}
                                     />
                                 </div>
                             </>
@@ -558,7 +534,7 @@ function UpdateProject() {
             </Modal>
 
             {/* member modal */}
-           {/* <Modal size="lg" isOpen={membersModal} toggle={toggleMembersModal}>
+            {/* <Modal size="lg" isOpen={membersModal} toggle={toggleMembersModal}>
                 <ModalHeader toggle={toggleMembersModal}>Members</ModalHeader>
                 <ModalBody>
                     <div className="table-responsive text-nowrap">
@@ -606,47 +582,47 @@ function UpdateProject() {
                     </Button>
                 </ModalFooter>
             </Modal>*/}
-             <Modal size="lg" isOpen={membersModal} toggle={toggleMembersModal}>
+            <Modal size="lg" isOpen={membersModal} toggle={toggleMembersModal}>
                 <ModalHeader toggle={toggleMembersModal}>Members</ModalHeader>
                 <ModalBody>
-                <div className="table-responsive text-nowrap">
-                        {PaginatedMembersGestionnaires.docs.length === 0 ? (
+                    <div className="table-responsive text-nowrap">
+                        {paginatedMembersGestionnaires.docs.length === 0 ? (
                             <div className="nodata">
                                 <img src={"./assets/img/empty-box.png"} />
                                 <div>no clients</div>
                             </div>
                         ) : (
                             <>                        <table className="table">
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>User informations</th>
-                                    <th>Equipe</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody className="table-border-bottom-0">
-                                {PaginatedMembersGestionnaires.docs.map((member) => {
-                                    return <ClientModalItem
-                                    key={member.id}
-                                    client={member}
-                                    isSelected={project.members.filter(item => item.id == member.id).length !== 0}
-                                    onDeleteUser={() => {
-                                        setProject({
-                                            ...project,
-                                            members: project.members.filter(item => item.id != member.id)
-                                        })
-                                    }}
-                                    onSelectUser={() => {
-                                        setProject({
-                                            ...project,
-                                            members: [...project.members, member]
-                                        })
-                                    }} />
-                                })}
-                            </tbody>
-                        </table>
-                        <div style={{ position: "relative" }} className="pagination-component">
+                                <thead>
+                                    <tr>
+                                        <th>#</th>
+                                        <th>User informations</th>
+                                        <th>Equipe</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="table-border-bottom-0">
+                                    {paginatedMembersGestionnaires.docs.map((member) => {
+                                        return <ClientModalItem
+                                            key={member.id}
+                                            client={member}
+                                            isSelected={project.members.filter(item => item.id == member.id).length !== 0}
+                                            onDeleteUser={() => {
+                                                setProject({
+                                                    ...project,
+                                                    members: project.members.filter(item => item.id != member.id)
+                                                })
+                                            }}
+                                            onSelectUser={() => {
+                                                setProject({
+                                                    ...project,
+                                                    members: [...project.members, member]
+                                                })
+                                            }} />
+                                    })}
+                                </tbody>
+                            </table>
+                                <div style={{ position: "relative" }} className="pagination-component">
                                     <ReactPaginate
                                         previousLabel={
                                             <div className="pagination-controls">
@@ -669,11 +645,11 @@ function UpdateProject() {
                                         breakLinkClassName="page-link"
                                         containerClassName="pagination"
                                         activeClassName="active"
-                                        onPageChange={(event) => changePage(event.selected)}
+                                        onPageChange={(event) => changeMemberPage(event.selected)}
                                         pageRangeDisplayed={3}
                                         marginPagesDisplayed={2}
                                         pageCount={paginatedClients.pagination.total_pages}
-                                        forcePage={currentPage - 1}
+                                        forcePage={currentMembrePage - 1}
                                     />
                                 </div>
                             </>

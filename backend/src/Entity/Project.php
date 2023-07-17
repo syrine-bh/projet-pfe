@@ -286,4 +286,22 @@ class Project
 
         return $this;
     }
+
+    /**
+     * @param Collection $members
+     */
+    public function removeMembers(): void
+    {
+        $this->members = new ArrayCollection();
+    }
+
+    /**
+     * @param Collection $clients
+     */
+    public function removeClients(): void
+    {
+        $this->clients = new ArrayCollection();
+    }
+
+
 }

@@ -84,7 +84,7 @@ function Profile() {
               <div className="user-profile-header d-flex flex-column flex-sm-row text-sm-start text-center mb-4">
                 <div className="flex-shrink-0 mt-n2 mx-sm-0 mx-auto">
                   <ProfileAvatar
-                    style={{border: "5px solid",marginLeft: "1.5rem"}}
+                    style={{ border: "5px solid", marginLeft: "1.5rem" }}
                     firstName={auth()!.firstname}
                     lastName={auth()!.lastname}
                     rounded={false}
@@ -125,7 +125,7 @@ function Profile() {
 
 
         {/* Navbar pills */}
-        <div className="row">
+        {/* <div className="row">
           <div className="col-md-12">
             <ul className="nav nav-pills flex-column flex-sm-row mb-4">
               {sections.map((sec, index) => {
@@ -140,15 +140,21 @@ function Profile() {
               })}
             </ul>
           </div>
-        </div>
+        </div> */}
 
         <div>
 
         </div>
         {/*/ Navbar pills */}
 
-        {(section === "profile") && <ProfileComponent user={user} />}
-        {(section === "projects") && <ProjectsComponent />}
+        {/* {(section === "profile") && <ProfileComponent user={user} />}
+        {(section === "projects") && <ProjectsComponent />} */}
+
+        <div className='row'>
+        <ProfileComponent user={user} />
+        <ProjectsComponent />
+        </div>
+
 
 
       </div>

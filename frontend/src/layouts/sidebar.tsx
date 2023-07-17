@@ -9,12 +9,12 @@ const navigation = [
         access: ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_CLIENT", "ROLE_ADMIN"]
     },
 
-    {
+    /*{
         title: "Search",
         href: "/search",
         icon: "bx bx-search",
         access: ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_CLIENT", "ROLE_ADMIN"]
-    },
+    },*/
     {
         title: "Users",
         href: "/users",
@@ -22,7 +22,7 @@ const navigation = [
         access: ["ROLE_ADMIN"]
     },
     {
-        title: "projects",
+        title: "Projects",
         href: "/projects",
         icon: "bx bx-briefcase",
         access: ["ROLE_MEMBRE", "ROLE_GESTIONNAIRE", "ROLE_CLIENT", "ROLE_ADMIN"]

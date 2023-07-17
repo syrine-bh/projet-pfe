@@ -5,6 +5,7 @@ import { useAuthUser } from 'react-auth-kit'
 import { UserModel } from '../models/UserModel';
 import { INIT_USER } from '../config';
 import { updateUser,fetchUserById } from '../fetchers/user-fetcher';
+import ProfileAvatar from '../components/profile-avatar';
 
 const Editprofile = () => {
 
@@ -59,19 +60,16 @@ const Editprofile = () => {
    
       <div  className="card-body">
         <div  className="d-flex align-items-start align-items-sm-center gap-4">
-          <img src="../../assets/img/avatars/1.png" alt="user-avatar"  className="d-block rounded" height="100" width="100" id="uploadedAvatar"/>
+        <ProfileAvatar
+                    style={{ border: "5px solid", marginLeft: "1.5rem" }}
+                    firstName={auth()!.firstname}
+                    lastName={auth()!.lastname}
+                    rounded={false}
+                    radius={110}
+                  />
           <div  className="button-wrapper">
-            <label htmlFor="upload"  className="btn btn-primary me-2 mb-4" >
-              <span  className="d-none d-sm-block">Upload new photo</span>
-              <i  className="bx bx-upload d-block d-sm-none"></i>
-              <input type="file" id="uploade"  className="account-file-input"  accept="image/png, image/jpeg"/>
-            </label>
-            <button type="button"  className="btn btn-label-secondary account-image-reset mb-4">
-              <i  className="bx bx-reset d-block d-sm-none"></i>
-              <span  className="d-none d-sm-block">Reset</span>
-            </button>
+            
 
-            <p  className="text-muted mb-0">Allowed JPG, GIF or PNG. Max size of 800K</p>
           </div>
         </div>
       </div>
