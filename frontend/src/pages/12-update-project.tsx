@@ -156,7 +156,7 @@ function UpdateProject() {
             return;
         }
         
-        //navigate(`/projects`)
+        navigate(`/projects`)
     }
 
 
@@ -273,7 +273,6 @@ function UpdateProject() {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>User informations</th>
                                                         <th>Company</th>
                                                         <th>Actions</th>
@@ -340,7 +339,6 @@ function UpdateProject() {
                                             <table className="table">
                                                 <thead>
                                                     <tr>
-                                                        <th>#</th>
                                                         <th>User informations</th>
                                                         <th>Equipe</th>
                                                         <th>Actions</th>
@@ -460,7 +458,6 @@ function UpdateProject() {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>User informations</th>
                                             <th>Company</th>
                                             <th>Actions</th>
@@ -595,7 +592,6 @@ function UpdateProject() {
                             <>                        <table className="table">
                                 <thead>
                                     <tr>
-                                        <th>#</th>
                                         <th>User informations</th>
                                         <th>Equipe</th>
                                         <th>Actions</th>

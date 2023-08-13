@@ -29,6 +29,9 @@ function Notifications() {
                 case 'ticket':
                     navigate(`/projects/${notification.link}/tickets`)
                     break;
+                case 'ticket':
+                        navigate(`/projects/${notification.link}/tickets`)
+                        break;
                 default:
                     console.log("error in navigation")
                     break;
@@ -61,7 +64,7 @@ function Notifications() {
                                     <div style={{ fontWeight: notification.vu === 0 ? 'bold' : 'normal' }} className="flex-grow-1">
                                         
                                         {notification.vu === 0 && <h6 className="mb-1">Nouvelle notification ✉️ </h6>}
-                                        <p className="mb-0">{notification.contenu}</p>
+                                        <p className="mb-0">{notification.contenu} {notification.type}</p>
                                         <small className="text-muted"> {new Date(notification.createdAt).toLocaleDateString()} {new Date(notification.createdAt).toLocaleTimeString()}</small>
                                     </div>
                                     <div className="flex-shrink-0 dropdown-notifications-actions">
@@ -79,7 +82,7 @@ function Notifications() {
                     </ul>
                     <div className="ps__rail-x" style={{ left: "0px", bottom: "0px" }}><div className="ps__thumb-x" tabIndex={0} style={{ left: "0px", width: "0px" }}></div></div><div className="ps__rail-y" style={{ top: "0px", right: "0px" }}><div className="ps__thumb-y" tabIndex={0} style={{ top: "0px", height: "0px" }}></div></div></li>
                 <li className="dropdown-menu-footer border-top">
-                    <a href="#" className="dropdown-item d-flex justify-content-center p-3">
+                    <a  className="dropdown-item d-flex justify-content-center p-3">
                         View all notifications
                     </a>
                 </li>

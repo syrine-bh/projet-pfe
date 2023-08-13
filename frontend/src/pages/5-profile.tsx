@@ -76,7 +76,7 @@ function Profile() {
 
         {/* Header */}
         <div className="row">
-          <div className="col-12">
+          <div className="col-8">
             <div className="card mb-4">
               <div className="user-profile-header-banner">
                 <img style={{ width: "100%", objectFit: "cover", height: "250px" }} src="./assets/img/backgrounds/back.jpg" alt="Banner image" className="rounded-top" />
@@ -117,6 +117,10 @@ function Profile() {
                 </div>
               </div>
             </div>
+          </div> 
+          <div className='col-xl-4 col-lg-4 col-md-4'>
+          <ProfileComponent user={user} />
+
           </div>
         </div>
 
@@ -150,11 +154,14 @@ function Profile() {
         {/* {(section === "profile") && <ProfileComponent user={user} />}
         {(section === "projects") && <ProjectsComponent />} */}
 
-        <div className='row'>
-        <ProfileComponent user={user} />
-        <ProjectsComponent />
-        </div>
-
+        {/* <div className='row'>
+          <div className="col-12">
+            <div className="card mb-4">
+              <ProfileComponent user={user} />
+               <ProjectsComponent />
+            </div>
+          </div>
+          </div> */}
 
 
       </div>

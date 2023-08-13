@@ -38,7 +38,15 @@ function Projects() {
                     <h4 style={{ display: "flex", justifyContent: "space-between" }} className="fw-bold py-3 mb-4">
                         <span className="text-muted fw-light"> Projects </span>
 
-                        <Link to={"/addProject"} className="btn btn-sm btn-iconbtn btn-primary text-nowrap" >Add project</Link>
+
+
+
+
+                        {auth && (auth()!.roles.includes('ROLE_GESTIONNAIRE') || auth()!.roles.includes('ROLE_ADMIN')) && (
+                            <Link to={"/addProject"} className="btn btn-sm btn-iconbtn btn-primary text-nowrap">Add project</Link>
+                        )}
+
+
                     </h4>
 
 
@@ -48,6 +56,7 @@ function Projects() {
                         {projects.map((item, index) => {
                             return <Projectitem key={index}
                                 project={item}
+                                deleteProject={(project)=> setProjects(projects.filter((item)=>item.id!==project.id))}
                             />
                         })}
                     </div>

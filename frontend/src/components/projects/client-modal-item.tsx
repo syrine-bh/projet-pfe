@@ -12,7 +12,6 @@ interface ClientModalItemProps {
 function ClientModalItem({ client, isSelected,onSelectUser, onDeleteUser }: ClientModalItemProps) {
     return (
         <tr key={client.id} className="odd">
-            <td>{client.id}</td>
             <td className="  control" tabIndex={0} style={{ display: "none" }}>
             </td>
             <td className="sorting_1">
@@ -26,9 +25,7 @@ function ClientModalItem({ client, isSelected,onSelectUser, onDeleteUser }: Clie
                 />                          </div>
                     </div>
                     <div className="d-flex flex-column">
-                        <a href="app-user-view-account.html" className="text-body text-truncate">
                             <span className="fw-semibold">{client.firstname} {client.lastname}</span>
-                        </a>
                         <small className="text-muted">{client.email}</small>
                     </div>
                 </div>

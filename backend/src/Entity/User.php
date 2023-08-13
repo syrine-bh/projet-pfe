@@ -68,12 +68,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Notification::class,inversedBy:"destinations" )]
     private Collection $notifications;
 
-    #[ORM\JoinTable(name: 'member_project')]
-    #[ORM\ManyToMany(targetEntity: Project::class,inversedBy:"members" )]
+
+    #[ORM\ManyToMany(targetEntity: Project::class,mappedBy:"members" )]
     private Collection $memberProjects;
 
-    #[ORM\JoinTable(name: 'client_project')]
-    #[ORM\ManyToMany(targetEntity: Project::class,inversedBy:"clients" )]
+    #[ORM\ManyToMany(targetEntity: Project::class,mappedBy:"clients" )]
     private Collection $clientProjects;
 
     #[ORM\OneToMany(targetEntity: Project::class, mappedBy: 'gestionnaire')]

@@ -12,7 +12,8 @@ function RoleCard({ title, users }: RoleCardProps) {
         <div className="card">
             <div className="card-body">
                 <div className="d-flex justify-content-between mb-2">
-                    <h6 className="fw-normal">Total {users.length} users</h6>
+                <h6 className="fw-normal"> {users.length} </h6>
+
                     <ul className="list-unstyled d-flex align-items-center avatar-group mb-0">
 
                         {users.map((item, index) => {
@@ -27,6 +28,7 @@ function RoleCard({ title, users }: RoleCardProps) {
                                     radius={32}
                                 />
                             </li>
+                            
                         })}
                         {(users.length > 4) && <li>
                             <small className="text-muted ms-1">+{users.length - 4}</small>

@@ -10,7 +10,6 @@ interface ClientFormItem {
 function ClientFormItem({ client,onDelete }: ClientFormItem) {
     return (
         <tr key={client.id} className="odd">
-            <td>{client.id}</td>
             <td className="sorting_1">
                 <div className="d-flex justify-content-left align-items-center">
                     <div className="avatar-wrapper">
@@ -22,9 +21,8 @@ function ClientFormItem({ client,onDelete }: ClientFormItem) {
                 />                          </div>
                     </div>
                     <div className="d-flex flex-column">
-                        <a href="app-user-view-account.html" className="text-body text-truncate">
                             <span className="fw-semibold">{client.firstname} {client.lastname}</span>
-                        </a>
+                      
                         <small className="text-muted">{client.email}</small>
                     </div>
                 </div>

@@ -49,19 +49,25 @@ function AddTicketModal({ projectId, isOpen, toggle }: AddTicketModalProps) {
       return;
     }
 
-    if (selectedFiles.length === 0) {
-      setAddErrorMessage({ status: "error", message: "Please provide attachments" })
-      return;
-    }
+    // if (selectedFiles.length === 0) {
+    //   setAddErrorMessage({ status: "error", message: "Please provide attachments" })
+    //   return;
+    // }
 
 
 
     setAddLoading(true)
     const responseAdd = await addTicket(projectId, ticket.title, ticket.description, ticket.priority, auth()!.id, auth()!.token);
+
     if (responseAdd.status === 'success') {
-      const responseUpload = await uploadTicketAttachements(responseAdd.message, selectedFiles, auth()!.token);
+      if (selectedFiles.length !== 0) {
+        const responseUpload = await uploadTicketAttachements(responseAdd.message, selectedFiles, auth()!.token);
+      }
       setAddLoading(false)
-      setAddErrorMessage(responseUpload)
+      setAddErrorMessage({ status: "", message: "" })
+      setTicket(INIT_TICKET);
+      toggle();
+      window.location.reload()
     }
 
 
@@ -144,14 +150,14 @@ function AddTicketModal({ projectId, isOpen, toggle }: AddTicketModalProps) {
           <div className="row">
             <div className="col mb-3">
               <label htmlFor="title" className="form-label">Title</label>
-              <input onChange={(event) => setTicket({ ...ticket, title: event.target.value })} value={ticket.title} type="text" id="title" className="form-control" placeholder="Enter Title" />
+              <input type="text" onChange={(event) => setTicket({ ...ticket, title: event.target.value })} value={ticket.title} id="title" className="form-control" placeholder="Enter Title" />
             </div>
           </div>
 
           <div className="row g-2">
             <div className="col mb-0">
               <label htmlFor="emailBasic" className="form-label">Description</label>
-             {/* <textarea value={ticket.description} onChange={(event) => setTicket({ ...ticket, description: event.target.value })} className="form-control" name="description" id="description" rows={3}>
+              {/* <textarea value={ticket.description} onChange={(event) => setTicket({ ...ticket, description: event.target.value })} className="form-control" name="description" id="description" rows={3}>
               </textarea> */}
 
 

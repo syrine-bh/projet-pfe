@@ -24,6 +24,7 @@ function DashboardForAdmin() {
     }
     const progressPercentage = (dashboardData.totalNumberCompletedProjects / dashboardData.totalNumberProjects) * 100;
 
+    //const activeUsersPercentage = (dashboardData.totalNumberActiveUsers / dashboardData.totalNumberUsers) * 100;
     const activeUsersPercentage = (dashboardData.totalNumberActiveUsers / dashboardData.totalNumberUsers) * 100;
 
     const initBarChart = (dashboardData: DashboardModel) => {
@@ -182,7 +183,9 @@ function DashboardForAdmin() {
                                         grid: { show: !1, padding: { left: -10, right: -10 } },
                                         stroke: { lineCap: "round" }, labels: ["Progress"]
                                     }}
-                                    series={[activeUsersPercentage]}
+                                    //series={[activeUsersPercentage]}
+                                    const series = {[parseFloat(activeUsersPercentage.toFixed(2))]}
+
                                     type="radialBar"
                                 />
                                 <div className="p-3 pt-2">
@@ -361,7 +364,7 @@ function DashboardForAdmin() {
                                             <small className="text-muted"> cyrine bh</small>
                                         </div>
                                         <div className="user-progress">
-                                            <h6 className="mb-0">15 tickets</h6>
+                                            <h6 className="mb-0">3 tickets</h6>
                                         </div>
                                     </div>
                                 </li>
@@ -378,7 +381,7 @@ function DashboardForAdmin() {
                                             <small className="text-muted">sarra bh</small>
                                         </div>
                                         <div className="user-progress">
-                                            <h6 className="mb-0">12 tickets </h6>
+                                            <h6 className="mb-0">2 tickets </h6>
                                         </div>
                                     </div>
                                 </li>
@@ -395,7 +398,7 @@ function DashboardForAdmin() {
                                             <small className="text-muted">lamia bbh</small>
                                         </div>
                                         <div className="user-progress">
-                                            <h6 className="mb-0">10 tickets </h6>
+                                            <h6 className="mb-0">2 tickets </h6>
                                         </div>
                                     </div>
                                 </li>
@@ -412,7 +415,7 @@ function DashboardForAdmin() {
                                             <small className="text-muted">nada bhs</small>
                                         </div>
                                         <div className="user-progress">
-                                            <h6 className="mb-0">9 tickets </h6>
+                                            <h6 className="mb-0">2 tickets </h6>
                                         </div>
                                     </div>
                                 </li>
@@ -429,7 +432,7 @@ function DashboardForAdmin() {
                                             <small className="text-muted">dina sbh</small>
                                         </div>
                                         <div className="user-progress">
-                                            <h6 className="mb-0">8 tickets</h6>
+                                            <h6 className="mb-0">2 tickets</h6>
                                         </div>
                                     </div>
                                 </li>

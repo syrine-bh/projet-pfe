@@ -68,23 +68,7 @@ function ProjectDetails() {
                 <div className="alert alert-warning mb-4" role="alert">
                   <h6 className="alert-heading fw-bold mb-1">Description</h6>
                   <span>{project.description}</span>
-                </div>
-
-                <div className="plan-statistics">
-                  <div className="d-flex justify-content-between">
-                    <span className="fw-semibold mb-2">Days</span>
-                    <span className="fw-semibold mb-2">24 of 30 Days</span>
-                  </div>
-                  <div className="progress mb-3" style={{ height: "8px" }}>
-                    <div
-                      className="progress-bar"
-                      role="progressbar"
-                      aria-valuemax={100}
-                      style={{ width: "70%" }}
-                    ></div>
-                  </div>
-                  <p className="mt-1 mb-0">6 days </p>
-                </div>
+                </div>              
               </div>
 
             </div>
@@ -98,7 +82,7 @@ function ProjectDetails() {
           <table className="table">
             <thead>
               <tr>
-                <th>#</th>
+                
                 <th>User informations</th>
                 <th>Company</th>
               </tr>
@@ -106,7 +90,7 @@ function ProjectDetails() {
             <tbody className="table-border-bottom-0">
               {project.clients.map((client) => {
                 return <tr key={client.id} className="odd">
-                  <td>{client.id}</td>
+                 
                   <td className="  control" tabIndex={0} style={{ display: "none" }}>
                   </td>
                   <td className="sorting_1">
@@ -122,9 +106,7 @@ function ProjectDetails() {
 
                       </div>
                       <div className="d-flex flex-column">
-                        <a href="app-user-view-account.html" className="text-body text-truncate">
                           <span className="fw-semibold">{client.firstname} {client.lastname}</span>
-                        </a>
                         <small className="text-muted">{client.email}</small>
                       </div>
                     </div>
@@ -145,7 +127,7 @@ function ProjectDetails() {
           <table className="table">
             <thead>
               <tr>
-                <th>#</th>
+            
                 <th>User informations</th>
                 <th>equipe</th>
 
@@ -154,7 +136,6 @@ function ProjectDetails() {
             <tbody className="table-border-bottom-0">
               {project.members.map((member) => {
                 return <tr key={member.id} className="odd">
-                  <td>{member.id}</td>
                   <td className="  control" tabIndex={0} style={{ display: "none" }}>
                   </td>
                   <td className="sorting_1">
@@ -169,9 +150,7 @@ function ProjectDetails() {
                         </div>
                       </div>
                       <div className="d-flex flex-column">
-                        <a href="app-user-view-account.html" className="text-body text-truncate">
                           <span className="fw-semibold">{member.firstname} {member.lastname}</span>
-                        </a>
                         <small className="text-muted">{member.email}</small>
                       </div>
                     </div>

@@ -4,11 +4,15 @@ import { ProjectModel } from '../../models/ProjectModel';
 
 import { Link } from 'react-router-dom';
 import ProfileAvatar from '../profile-avatar';
+import Swal from 'sweetalert2';
+import { fetchDeleteProject } from '../../fetchers/project-fetcher';
+import { useAuthUser } from 'react-auth-kit';
 interface ProjectitemProps {
   project: ProjectModel;
+  deleteProject: (project: ProjectModel) => void
 }
 
-function Projectitem({ project }: ProjectitemProps) {
+function Projectitem({ project, deleteProject }: ProjectitemProps) {
   const startdate = new Date(project.startdate)
   const deadline = new Date(project.deadline)
 
@@ -32,6 +36,26 @@ function Projectitem({ project }: ProjectitemProps) {
     } else {
       return <span className="badge bg-label-success ms-auto">{diffInDays} Days left</span>
     }
+  }
+
+
+  const auth = useAuthUser()
+
+  const handleDelete = () => {
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "You won't be able to revert this!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Yes, delete it!'
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const response = await fetchDeleteProject(project.id, auth()!.token)
+        deleteProject(project);
+      }
+    })
   }
   return (
     <div className="col-xl-4 col-lg-6 col-md-6">
@@ -57,13 +81,12 @@ function Projectitem({ project }: ProjectitemProps) {
                 <button type="button" className="btn dropdown-toggle hide-arrow p-0" data-bs-toggle="dropdown" aria-expanded="false"><i className="bx bx-dots-vertical-rounded"></i></button>
                 <ul className="dropdown-menu dropdown-menu-end" >
                   <li><Link className="dropdown-item" to={`/updateProject/${project.id}`}>update  project</Link></li>
-                  <Link to={`/projectDetails/${project.id}`} className="dropdown-item">project details</Link>
+                  <li><Link to={`/projectDetails/${project.id}`} className="dropdown-item">project details</Link></li>
                   <li><Link className="dropdown-item" to={`/projects/${project.id}/tickets`}>tickets</Link></li>
-
                   <li>
                     <hr className="dropdown-divider" />
                   </li>
-                  <li><a className="dropdown-item text-danger" href="#">Leave Project</a></li>
+                  <li><button onClick={handleDelete} style={{ color: "#ff3e1d" }} className='dropdown-item'>delete project</button> </li>
                 </ul>
               </div>
             </div>
@@ -98,11 +121,12 @@ function Projectitem({ project }: ProjectitemProps) {
               style={{ width: `${(project.nbrTicketDone / project.nbrTicketsTotal) * 100}%` }}
             ></div>
           </div>
+          Members
 
           <div className="d-flex align-items-center">
             <div className="d-flex align-items-center">
               <ul className="list-unstyled d-flex align-items-center avatar-group mb-0 zindex-2">
-                {(project.members.map((member, index) => 
+                {(project.members.map((member, index) =>
                   (index < 4) &&
                   <li
                     key={index}

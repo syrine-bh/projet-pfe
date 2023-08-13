@@ -76,7 +76,28 @@ export const updateProject = async (project: ProjectModel, gestionnaireId: strin
 
 }
 
+export const fetchDeleteProject = async (projectId: number, token: string): Promise<BackendResponse> => {
+    try {
+        const response = await apiClient.delete<BackendResponse>(`/deleteProject/${projectId}`, {
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
 
+        if (response.status === 200) {
+            return response.data;
+        }
+
+        const backendResponse: BackendResponse = { status: "error", message: "something went wrong" }
+        return backendResponse;
+
+
+    } catch (error: any) {
+        const backendResponse: BackendResponse = { status: "error", message: "something went wrong" }
+        return backendResponse;
+    }
+
+}
 
 
 
@@ -124,6 +145,17 @@ export const fetchPaginatedUsersAddedToProject = async (projectId: string,token:
             ...INIT_PAGINATED_USERS,
             isLoadingAccounts:false
         }
+    }
+}
+
+export const fetchUsersAddedToProject = async (projectId: string,token: string): Promise<UserModel[]> => {
+    try {
+        const response = await apiClient.get<UserModel[]>(`/projects/${projectId}/allMembers`, { headers: { "Authorization": `Bearer ${token}` } });
+        return response.data;
+
+
+    } catch (error: any) {
+        return [];
     }
 }
 

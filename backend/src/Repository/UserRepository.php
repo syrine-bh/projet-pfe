@@ -86,11 +86,28 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->getQuery()->getResult();
     }
 
+    public function getAllProjectMembers(int $projectId){
+        return $this->createQueryBuilder('u')
+            ->innerJoin(Project::class, 'p', Join::WITH, 'p MEMBER OF u.memberProjects')
+            ->andWhere('p.id = :projectId')
+            ->setParameter('projectId', $projectId)
+            ->getQuery()->getResult();
+    }
+
     public function getUsersWithClientRole()
     {
         return $this->createQueryBuilder('u')
             ->andWhere('u.roles LIKE :role')
             ->setParameter('role', '%"ROLE_CLIENT"%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function getUsersWithMemberRole()
+    {
+        return $this->createQueryBuilder('u')
+            ->andWhere('u.roles LIKE :role')
+            ->setParameter('role', '%"ROLE_MEMBRE"%')
             ->getQuery()
             ->getResult();
     }

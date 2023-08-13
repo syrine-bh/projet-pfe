@@ -56,17 +56,17 @@ class Project
 
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'gestionnaireProjects')]
-    #[Groups(["projects"])]
+    #[Groups(["projects","ticket"])]
     private $gestionnaire;
 
 
-
-    #[ORM\ManyToMany(targetEntity: User::class,mappedBy:"memberProjects")]
+    #[ORM\JoinTable(name: 'member_project')]
+    #[ORM\ManyToMany(targetEntity: User::class,inversedBy:"memberProjects")]
     #[Groups(["projects"])]
     private Collection $members;
 
-
-    #[ORM\ManyToMany(targetEntity: User::class,mappedBy:"clientProjects")]
+    #[ORM\JoinTable(name: 'client_project')]
+    #[ORM\ManyToMany(targetEntity: User::class,inversedBy:"clientProjects")]
     #[Groups(["projects"])]
     private Collection $clients;
 
@@ -292,6 +292,7 @@ class Project
      */
     public function removeMembers(): void
     {
+        $this->members->clear();
         $this->members = new ArrayCollection();
     }
 
@@ -300,6 +301,7 @@ class Project
      */
     public function removeClients(): void
     {
+        $this->clients->clear();
         $this->clients = new ArrayCollection();
     }
 

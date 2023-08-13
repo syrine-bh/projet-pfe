@@ -6,7 +6,7 @@ import { useNavigate, useParams, useSearchParams } from 'react-router-dom';
 
 import { fetchTicketById, fetchTickets, saveChanges } from '../fetchers/ticket-fetcher';
 
-import { INIT_TICKET } from '../config';
+import { INIT_PROJECT, INIT_TICKET, INIT_USER } from '../config';
 import { useAuthUser } from 'react-auth-kit';
 import { BackendResponse } from '../models/BackendResponse';
 import { TicketModel } from '../models/TicketModel';
@@ -195,7 +195,7 @@ const shortText = plainText.slice(0, 40) + '...';
 
     const handleClickTicket = async (clickedTicket: TicketModel) => {
 
-        setSelectedTicket(clickedTicket)
+        setSelectedTicket({...clickedTicket,project:{...INIT_PROJECT,gestionnaire:{...INIT_USER}}})
         toggleEditTicketModal()
         const ticket = await fetchTicketById(clickedTicket.id, auth()!.token)
         console.log(ticket)

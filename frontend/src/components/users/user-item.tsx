@@ -36,7 +36,6 @@ function UserItem({ index, user, onclickUpdate, onClickStatus }: UserItemProps) 
 
     return (
         <tr key={index} className="odd">
-            <td>{index + 1}</td>
             <td className="  control" tabIndex={0} style={{ display: "none" }}>
             </td>
             <td className="sorting_1">
@@ -50,9 +49,7 @@ function UserItem({ index, user, onclickUpdate, onClickStatus }: UserItemProps) 
                 />                          </div>
                     </div>
                     <div className="d-flex flex-column">
-                        <a href="app-user-view-account.html" className="text-body text-truncate">
                             <span className="fw-semibold">{user.firstname} {user.lastname}</span>
-                        </a>
                         <small className="text-muted">{user.email}</small>
                     </div>
                 </div>
@@ -71,7 +68,6 @@ function UserItem({ index, user, onclickUpdate, onClickStatus }: UserItemProps) 
                     </div>
                 </span>
             </td>
-            <td><span className="fw-semibold">Equipe</span></td>
             <td>
                 {(user.isActive === 1)
                     ? <span className="badge bg-label-success">Active</span>
@@ -80,7 +76,6 @@ function UserItem({ index, user, onclickUpdate, onClickStatus }: UserItemProps) 
             <td>
                 <div className="d-inline-block text-nowrap">
                     <button onClick={onclickUpdate} className="btn btn-sm btn-icon"><i className="bx bx-edit"></i></button>
-                    <button className="btn btn-sm btn-icon delete-record"><i className="bx bx-trash"></i></button>
                     <button className="btn btn-sm btn-icon dropdown-toggle hide-arrow" data-bs-toggle="dropdown" aria-expanded="false">
                         <i className="bx bx-dots-vertical-rounded"></i>
                     </button>

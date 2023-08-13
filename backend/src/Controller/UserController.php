@@ -300,7 +300,8 @@ class UserController extends AbstractController
         $offset = ($page - 1) * $perPage;
 
         // Récupération des utilisateurs paginés
-        $users = $userRepository->getUsersWithMmebreGestionnaireRole();
+        //$users = $userRepository->getUsersWithMmebreGestionnaireRole();
+        $users = $userRepository->getUsersWithMemberRole();
         $totalUsers = count($users);
 
         // Pagination

@@ -46,6 +46,10 @@ function Users() {
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
+    const userRole = 'ROLE_USER'; // Rôle actuel de l'utilisateur
+
+const filteredRolesList = ROLES_LIST.filter(roleOption => roleOption.value !== userRole);
+
     const fetchData = async () => {
         var initPage = 1
         var initPerPage = 10
@@ -174,7 +178,7 @@ function Users() {
 
                 <div className="row g-4">
 
-                    <div className="col-xl-3 col-lg-6 col-md-6">
+                 {/*  <div className="col-xl-3 col-lg-6 col-md-6">
                         <RoleCard
                             users={paginatedUsers.docs.filter((item) => item.roles.includes("ROLE_ADMIN"))}
                             title={"Administrator"}
@@ -199,7 +203,7 @@ function Users() {
                         />
                     </div>
 
-
+*/}
 
                     <div className="col-12">
                         <div className="card">
@@ -237,10 +241,8 @@ function Users() {
                                 <table className="table">
                                     <thead>
                                         <tr>
-                                            <th>#</th>
                                             <th>User</th>
                                             <th>Role</th>
-                                            <th>Equipe</th>
                                             <th>Status</th>
                                             <th>Actions</th>
                                         </tr>
@@ -292,7 +294,7 @@ function Users() {
 
                     </div>
                 </div>
-
+                                    
 
 
 
@@ -316,10 +318,7 @@ function Users() {
                                 <label htmlFor="email" className="form-label">E-mail</label>
                                 <input onChange={(e: ChangeEvent<HTMLInputElement>) => setselectedUser({ ...selectedUser, email: e.target.value })} defaultValue={selectedUser.email} className="form-control" type="text" id="email" name="email" placeholder="cyrine.benhassine@gmail.com" />
                             </div>
-                            <div className="mb-3 col-md-6">
-                                <label htmlFor="equipe" className="form-label">Equipe</label>
-                                <input type="text" className="form-control" id="equipe" name="equipe" />
-                            </div>
+                            
                             <div className="mb-3 col-md-6">
                                 <label className="form-label" htmlFor="phoneNumber">Phone Number</label>
                                 <div className="input-group input-group-merge">
@@ -330,13 +329,13 @@ function Users() {
                             <div className="mb-3 col-md-6">
                                 <label htmlFor="address" className="form-label">Role</label>
                                 <Select
-                                    isMulti
-                                    defaultValue={selectedUser.roles.map((role) => {
-                                        return {
-                                            value: role,
-                                            label: role.split("_")[1].toLowerCase()
-                                        }
-                                    })}
+    isMulti
+    defaultValue={selectedUser.roles.map((role) => {
+        return {
+            value: role,
+            label: role.split("_")[1].toLowerCase()
+        };
+    })}
                                     onChange={(newValue) => setselectedUser({
                                         ...selectedUser, roles: newValue.map((val) => {
                                             return val.value

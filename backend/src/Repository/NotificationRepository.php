@@ -50,6 +50,16 @@ class NotificationRepository extends ServiceEntityRepository
             ->getQuery()->getResult();
     }
 
+    public function getProjectNotifications(int $projectId)
+    {
+        return $this->createQueryBuilder('n')
+            ->andWhere('n.link = :projectId AND n.type = :type')
+            ->setParameter('projectId', "$projectId")
+            ->setParameter('type', "project")
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return Notification[] Returns an array of Notification objects
 //     */

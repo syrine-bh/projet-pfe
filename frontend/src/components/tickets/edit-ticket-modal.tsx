@@ -25,8 +25,9 @@ import CommentLoader from "./comment-loader"
 import AttachmentItem from "./attachment-item"
 
 
-import { fetchPaginatedUsersAddedToProject } from "../../fetchers/project-fetcher"
+import { fetchPaginatedUsersAddedToProject, fetchUsersAddedToProject } from "../../fetchers/project-fetcher"
 import { ProjectModel } from "../../models/ProjectModel"
+import Select from 'react-select';
 
 interface EditTicketModalProps {
     isOpen: boolean
@@ -44,7 +45,7 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
     //state management
     const [membersSection, setMembersSection] = useState(false);
     const toggleMembersSection = () => setMembersSection(!membersSection);
-    const [paginatedMembers, setPaginatedMembers] = useState<PaginatedUsers>(INIT_PAGINATED_USERS);
+    const [members, setMembers] = useState<UserModel[]>([]);
     const [currentPage, setCurrentPage] = useState(1)
     const [selectedComments, setSelectedComments] = useState<CommentModel[]>([])
     const [commentContent, setCommentContent] = useState<string>("")
@@ -61,21 +62,20 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
 
     useEffect(() => {
         fetchData()
-
-
-
+        console.log(selectedTicket)
     }, [])
+
     const { id } = useParams(); //projectId
 
     const fetchData = async () => {
-        var initPage = 1
-        if (searchParams.get("page") && Number(searchParams.get("page")!)) {
-            setCurrentPage(Number(searchParams.get("page")!))
-            initPage = Number(searchParams.get("page")!)
-        }
-        ///const paginatedResponse = await fetchPaginatedUsers(auth()!.token, PER_PAGE, initPage);
-        const paginatedResponse: PaginatedUsers = await fetchPaginatedUsersAddedToProject(id!, auth()!.token, PER_PAGE, initPage)
-        setPaginatedMembers(paginatedResponse)
+        // var initPage = 1
+        // if (searchParams.get("page") && Number(searchParams.get("page")!)) {
+        //     setCurrentPage(Number(searchParams.get("page")!))
+        //     initPage = Number(searchParams.get("page")!)
+        // }
+        //const paginatedResponse = await fetchPaginatedUsers(auth()!.token, PER_PAGE, initPage);
+        const response: UserModel[] = await fetchUsersAddedToProject(id!, auth()!.token)
+        setMembers(response)
     }
 
     const changeAssignedTo = async (member: UserModel) => {
@@ -111,12 +111,12 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
         setSelectedComments(response)
     }
 
-    const changePage = async (index: number) => {
-        setPaginatedMembers({ ...paginatedMembers, docs: [], isLoadingAccounts: true })
-        const response = await fetchPaginatedUsers(auth()!.token, PER_PAGE, index + 1,"");
-        setPaginatedMembers(response)
-        setCurrentPage(index + 1)
-    }
+    // const changePage = async (index: number) => {
+    //     setPaginatedMembers({ ...paginatedMembers, docs: [], isLoadingAccounts: true })
+    //     const response = await fetchPaginatedUsers(auth()!.token, PER_PAGE, index + 1, "");
+    //     setPaginatedMembers(response)
+    //     setCurrentPage(index + 1)
+    // }
 
 
     /*const handleSubmitComment = async (e: any) => {
@@ -167,10 +167,6 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
         setCommentType("text");
     }
 
-
-
-
-
     return (
         <>
             <div style={{ width: "490px" }} className={(isOpen) ? "offcanvas offcanvas-end show" : "offcanvas offcanvas-end"} tabIndex={-1} id="offcanvasEnd" aria-labelledby="offcanvasEndLabel" aria-modal="true" role="dialog">
@@ -205,13 +201,61 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
                     <div className="tab-content px-0 pb-0 border-0">
                         {/* Update item/tasks */}
                         <div className="tab-pane fade show active" id="tab-update" role="tabpanel">
+                        <div className="mb-3">
+                                <label className="form-label">Assigned</label>
 
+                                
+                                <div style={{
+                                    display: "flex",
+                                    alignItems: "center"
+                                }} className="assigned avatar-group">
+                                    {(selectedTicket.assignedTo) && <div className="avatar avatar-sm me-0" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Bruce" data-bs-original-title="Bruce">
+                                        <ProfileAvatar
+                                            firstName={selectedTicket.assignedTo.firstname}
+                                            lastName={selectedTicket.assignedTo.lastname}
+                                            radius={28}
+                                        />
+                                    </div>}
+
+                                    {(auth()!.roles.includes("ROLE_ADMIN") || (auth()!.id === selectedTicket.project.gestionnaire.id )) 
+                                        && <div className="avatar avatar-sm">
+                                        <button type='button' onClick={toggleMembersSection} className="avatar-initial rounded-circle bg-label-secondary">
+                                            {(membersSection === false)
+                                                ? <i className='bx bx-plus'></i>
+                                                : <i className='bx bx-x'></i>
+                                            }
+                                        </button>
+                                    </div>
+                                    }
+
+
+
+
+
+                                    {(membersSection) && <div style={{ width: "calc(100% - 64px)" }}><Select
+
+                                        defaultValue={{ value: selectedTicket.assignedTo?.id.toString(), label: selectedTicket.assignedTo?.firstname + " " + selectedTicket.assignedTo?.lastname }}
+                                        onChange={(newValue) => {
+                                            const member = members.filter((item)=> item.id.toString()===newValue?.value)[0];
+                                            if(member){
+                                                changeAssignedTo(member)
+                                                toggleMembersSection()
+                                            }
+                                        }}
+                                        options={members.map((member) => {
+                                            return {
+                                                value: member.id.toString(),
+                                                label: member.firstname + " " + member.lastname
+                                            }
+                                        })} /></div>}
+                                </div>
+                            </div>
                             <div className="mb-3">
-                                TITLE :   <h6 className="badge bg-label-info ms-auto" > {selectedTicket.title}</h6>
+                                Title :   <h6 className="badge bg-label-info ms-auto" > {selectedTicket.title}</h6>
 
                             </div>
                             <div className="d-flex align-items-center mb-3" >
-                                <h6>STATE :   {selectedTicket.status} </h6>
+                                <h6>State :   {selectedTicket.status} </h6>
                                 <div className="d-flex align-items-center mb-3">
                                     {selectedTicket.priority === "low" && (
                                         <span style={{ marginRight: '-80px' }} className="badge bg-label-success ms-auto">{selectedTicket.priority}</span>
@@ -224,7 +268,7 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
                                     )}
                                 </div>
                             </div>
-                            <p className="mb-1">DESCRIPTION : <br></br> {plainText}</p>
+                            <p className="mb-1">Description : <br></br> {plainText}</p>
                             <br></br>
 
                             <div className='mb-3'>
@@ -244,29 +288,9 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
 
 
 
-                            <div className="mb-3">
-                                <label className="form-label">Assigned</label>
-                                <div className="assigned d-flex flex-wrap avatar-group">
-                                    {(selectedTicket.assignedTo) && <div className="avatar avatar-sm me-0" data-bs-toggle="tooltip" data-bs-placement="top" aria-label="Bruce" data-bs-original-title="Bruce">
-                                        <ProfileAvatar
-                                            firstName={selectedTicket.assignedTo.firstname}
-                                            lastName={selectedTicket.assignedTo.lastname}
-                                            radius={28}
-                                        />
-                                    </div>}
 
-                                    <div className="avatar avatar-sm">
 
-                                        <button type='button' onClick={toggleMembersSection} className="avatar-initial rounded-circle bg-label-secondary">
-                                            {(membersSection === false)
-                                                ? <i className='bx bx-plus'></i>
-                                                : <i className='bx bx-x'></i>
-                                            }
-                                        </button>
-                                    </div></div>
-                            </div>
-
-                            {(membersSection) && <div className='mb-3'>
+                            {/* {(membersSection) && <div className='mb-3'>
                                 <div className="table-responsive text-nowrap">
                                     <table className="table">
                                         <thead>
@@ -293,9 +317,7 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
                                                                     </div>
                                                                 </div>
                                                                 <div className="d-flex flex-column">
-                                                                    <a href="app-user-view-account.html" className="text-body text-truncate">
                                                                         <span className="fw-semibold">{member.firstname} {member.lastname}</span>
-                                                                    </a>
                                                                     <small className="text-muted">{member.email}</small>
                                                                 </div>
                                                             </div>
@@ -344,7 +366,7 @@ function EditTicketModal({ isOpen, toggle, selectedTicket, updateSelectedTicket,
                                         forcePage={currentPage - 1}
                                     />
                                 </div>
-                            </div>}
+                            </div>} */}
 
 
 

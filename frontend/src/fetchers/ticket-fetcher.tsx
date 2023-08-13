@@ -32,8 +32,8 @@ export const addTicket = async (projectId: string, title: string, description: s
 
 export const uploadTicketAttachements = async (ticketId: string, files: File[], token: string) => {
     try {
-        const formData = new FormData();
-        files.forEach((file, index) => formData.append(`files[${index}]`, file));
+        const formData = new FormData(); //body de la requete
+        files.forEach((file, index) => formData.append(`files[${index}]`, file)); //ajouter les fichier dans le body
 
         const response = await apiClient.post<BackendResponse>(`/api/projects/tickets/${ticketId}/uploadAttachments`, formData, {
             headers: {

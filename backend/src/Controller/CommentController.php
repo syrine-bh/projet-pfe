@@ -55,8 +55,8 @@ class CommentController extends AbstractController
 
         $notification->setCreatedAt(new \DateTimeImmutable());
         $notification->setVu(0);
-        $notification->setType('comment');
-        $notification->setLink($comment->getId());
+        $notification->setType('ticket');
+        $notification->setLink($ticketId);
 
         $em->persist($notification);
         $em->flush();
